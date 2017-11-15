@@ -3,13 +3,15 @@ version: '2'
 services:
   web:
     build: ./web
-    expose:
-      - "5000"
+    ports:
+      - "5000:5000"
     depends_on:
-      - database
+      - postgres
 
-  database:
+  postgres:
     image: postgres:10
+    env_file:
+      - .env
     volumes:
       - /var/lib/postgresql
     expose:

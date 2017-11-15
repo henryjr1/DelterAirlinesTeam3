@@ -4,14 +4,15 @@ Generate sample database for the web app
 #--------------------------------------#
 '''
 
-from app import db
+
 from app.models import *
 import datetime
 import random
 
 # create the database table and make-up data
 
-def initialize_db():
+def init_db():
+    print('Start creating database...')
     db.drop_all()
     db.create_all()
 
@@ -79,3 +80,5 @@ def initialize_db():
 
     # commit the changes
     db.session.commit()
+
+    print('Finish creating database....')
