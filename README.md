@@ -20,7 +20,7 @@ Say what the step will be
 
 1. Clone project at with ```git clone```.
 ```
-    git clone https://github.com/mehemken/docker-flask-postgres
+    git clone https://github.com/henryjr1/DelterAirlinesTeam3.git
 ```
 2. Create .env file at the root of project
 
