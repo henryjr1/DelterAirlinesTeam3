@@ -105,7 +105,7 @@ Now open your browser and try the url http://localhost:5000/api/v1.0/flights. It
 
 ## Authors
 
-* **Anh Do - [aqd14](https://github.com/aqd14)
+* **Anh Do** - [aqd14](https://github.com/aqd14)
 * **Will Nobles**
 * **Will Lee**
 * **Dalton Weeb**
