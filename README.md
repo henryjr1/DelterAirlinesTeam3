@@ -41,7 +41,7 @@ Say what the step will be
 ## Deployment
 ```
 docker-compose build  ---  build the image
-docker-compose -d     ---  run the container on background and build image if necessary
+docker-compose up -d  ---  run the container on background and build image if necessary
 ```
 
 Now open your browser and try the url http://localhost:5000/api/v1.0/flights. It should return something like this
