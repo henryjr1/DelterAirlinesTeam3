@@ -22,4 +22,4 @@ class FlightSearchForm(FlaskForm):
     flying_from = StringField('From', validators=[DataRequired(), Length(max=40)])
     flying_to = StringField('To', validators=[DataRequired(), Length(max=40)])
     departure_date = DateField('DepartureDate', validators=[DataRequired()])
-    return_date = DateField('ReturnDate', validators=[DataRequired()])
+    arrival_date = DateField('ArrivalDate', validators=[DataRequired()])

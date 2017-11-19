@@ -11,14 +11,6 @@ class Passenger(db.Model):
     email = db.Column(db.String(30), unique=True, nullable=False)
     address = db.Column(db.Text, nullable=False)
 
-    '''
-    def __init__(self, name, dob, email, address):
-        self.name = name
-        self.dob = dob
-        self.email = email
-        self.address = address
-    '''
-
     def __repr__(self):
         return '<name {}>'.format(self.name)
 
@@ -30,12 +22,8 @@ class Plane(db.Model):
     model = db.Column(db.String(30), unique=True, nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     flight_number = db.Column(db.String(30), unique=True, nullable=False)
-    '''
-    def __init__(self, model, capacity, flight_number):
-        self.model = model
-        self.capacity = capacity
-        self.flight_number = flight_number
-    '''
+    tickets = db.relationship("Ticket", backref="planes", lazy="dynamic")
+
     def __repr__(self):
         return '<model = {} --- capacity = {} --- flight number = {}>'.format(self.model, self.capacity, self.flight_number)
 
@@ -47,28 +35,23 @@ class Flight(db.Model):
     source = db.Column(db.String(200), nullable=False)
     destination = db.Column(db.String(200), nullable=False)
     plane_id = db.Column(db.Integer, db.ForeignKey('planes.id'))
-    plane = db.relationship("Plane", backref='flights')
+    plane = db.relationship("Plane", backref=db.backref('flights', lazy=True))
     departure_time = db.Column(db.DateTime, nullable=False)
     arrival_time = db.Column(db.DateTime, nullable=False)
     locale = db.Column(db.String(50), nullable=False)
 
-    def serialize(self):
-        return {
-            'id': self.id,
-            'source': self.source,
-            'destination': self.destination,
-            'departure_time': self.departure_time,
-            'arrival_time': self.arrival_time,
-            'local': self.locale
-        }
-    '''
-    def __init__(self, source, destination, departure_time, arrival_time, locale):
-        self.source = source
-        self.destination = destination
-        self.departure_time = departure_time
-        self.arrival_time = arrival_time
-        self.locale = locale
-    '''
+
+class Ticket(db.Model):
+    __tablename__ = 'tickets'
+
+    id = db.Column(db.Integer, primary_key=True)
+    seat_number = db.Column(db.String(4), nullable=False)
+    available = db.Column(db.Boolean, nullable=False)
+    plane_id = db.Column(db.Integer, db.ForeignKey('planes.id'), nullable=False)
+    plane = db.relationship("Plane")
+
+    def __repr__(self):
+        return '<seat_number = {} --- available = {} ----'.format(self.seat_number, self.available)
 
 
 class AirFare(db.Model):
@@ -77,11 +60,7 @@ class AirFare(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Numeric, nullable=False)
     description = db.Column(db.String(100), nullable=True)
-    '''
-    def __init__(self, amount, description):
-        self.amount = amount
-        self.description = description
-    '''
+
 
 class Transaction(db.Model):
     __tablename__ = 'transactions'

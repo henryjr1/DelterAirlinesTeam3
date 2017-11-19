@@ -17,7 +17,7 @@ class FlightAPI(Resource):
         :return: flight given id or all available flights if id is not specified
         """
         flight_id = request.args.get('id')
-        print('Flight id = {}'.format(flight_id))
+        # print('Flight id = {}'.format(flight_id))
         if flight_id is not None:
             # Get all currently available flights
             flight = Flight.query.get(flight_id)
@@ -27,9 +27,9 @@ class FlightAPI(Resource):
         else:
             # return jsonify(flights=[flight.serialize() for flight in Flight.query.all()])
             flights = Flight.query.all()
-            print(flights)
+            # print(flights)
             result = self.flights_schema.dump(flights)
-            print(result.data)
+            # print(result.data)
             return {'flights': result.data}
 
 
@@ -47,13 +47,32 @@ class FlightSearchAPI(Resource):
         fly_from = form.flying_from.data
         fly_to = form.flying_to.data
         departure_date = form.departure_date.data
-        return_date = form.return_date.data
+        arrival_date = form.arrival_date.data
 
         print(fly_from)
         print(fly_to)
         print(departure_date)
+        print(arrival_date)
 
         return make_response(render_template('flight_search.html', form=form), 200, headers)
+
+
+class TicketAPI(Resource):
+    def __init__(self):
+        self.tickets_schema = TicketSchema(many=True)
+
+    def get(self):
+        flight_id = request.args.get('available')
+        if flight_id is None:
+            tickets = Ticket.query.all()
+        elif flight_id == 'False':
+            tickets = Ticket.query.filter(Ticket.available == False).all()
+        else:
+            tickets = Ticket.query.filter(Ticket.available == True).all()
+        # print(tickets)
+        result = self.tickets_schema.dump(tickets)
+        # print(result.data)
+        return {'tickets': result.data}
 
 
 class OrderAPI(Resource):

@@ -6,6 +6,7 @@ Generate sample database for the web app
 
 
 from app.models import *
+from app.common.util import generate_random_ticket
 import datetime
 import random
 
@@ -27,9 +28,18 @@ def init_db():
     db.session.add(passenger3)
 
     # insert plane data
-    plane1 = Plane(model='Boeing 747', capacity=56, flight_number='BOEING_123')
-    plane2 = Plane(model='Airbus 322', capacity=74, flight_number='AIRBUS_435')
-    plane3 = Plane(model='SpaceX 543', capacity=32, flight_number='SPACEX_653')
+    plane1 = Plane(model='Boeing 747', capacity=54, flight_number='BOEING_123')
+    tickets1 = generate_random_ticket(plane1.capacity)
+    plane1.tickets.extend(tickets1)
+
+    plane2 = Plane(model='Airbus 322', capacity=72, flight_number='AIRBUS_435')
+    tickets2 = generate_random_ticket(plane2.capacity)
+    plane2.tickets.extend(tickets2)
+
+    plane3 = Plane(model='SpaceX 543', capacity=36, flight_number='SPACEX_653')
+    tickets3 = generate_random_ticket(plane3.capacity)
+    plane3.tickets.extend(tickets3)
+
     # add to session
     db.session.add(plane1)
     db.session.add(plane2)
