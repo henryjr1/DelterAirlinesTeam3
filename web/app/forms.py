@@ -19,7 +19,7 @@ class FlightSearchForm(FlaskForm):
     """
     Flight search form
     """
-    flying_from = StringField('From', validators=[DataRequired(), Length(max=40)])
-    flying_to = StringField('To', validators=[DataRequired(), Length(max=40)])
-    departure_date = DateField('DepartureDate', validators=[DataRequired()])
-    arrival_date = DateField('ArrivalDate', validators=[DataRequired()])
+    fromLocation = StringField('From', validators=[DataRequired(), Length(max=40)])
+    toLocation = StringField('To', validators=[DataRequired(), Length(max=40)])
+    startDate = DateField('DepartureDate', validators=[DataRequired()])
+    endDate = DateField('ArrivalDate', validators=[DataRequired()])

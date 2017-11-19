@@ -1,5 +1,6 @@
+from datetime import datetime
 from flask_restful import Resource
-from flask import request, render_template, make_response
+from flask import request, render_template, make_response, redirect, url_for
 from app.models import *
 from app.schemas import *
 from app.forms import *
@@ -36,25 +37,31 @@ class FlightAPI(Resource):
 class FlightSearchAPI(Resource):
 
     def get(self):
-        form = FlightSearchForm(request.form)
-        headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('flight_search.html', form=form), 200, headers)
+        """
+        /inventory?startDate=2017-11-14T00:00&endDate=2017-11-14T23:59&location=Starkville,%20MS
 
-    def post(self):
-        form = FlightSearchForm(request.form)
-        headers = {'Content-Type': 'text/html'}
-        #if form.validate_on_submit():
-        fly_from = form.flying_from.data
-        fly_to = form.flying_to.data
-        departure_date = form.departure_date.data
-        arrival_date = form.arrival_date.data
+        :return:
+        """
+        args = request.args
+        if len(args) == 0:
+            form = FlightSearchForm(request.form)
+            headers = {'Content-Type': 'text/html'}
+            return make_response(render_template('flight_search.html', form=form), 200, headers)
 
-        print(fly_from)
-        print(fly_to)
-        print(departure_date)
-        print(arrival_date)
+        from_location = args['fromLocation']
+        to_location = args['toLocation']
+        startDate = args['startDate']
+        endDate = args['endDate']
 
-        return make_response(render_template('flight_search.html', form=form), 200, headers)
+        startDate = datetime.strptime(startDate, '%Y-%m-%d')
+        endDate = datetime.strptime(endDate, '%Y-%m-%d')
+
+        available_flights = Flight.query.filter(Flight.source == from_location,
+                                                Flight.destination == to_location,
+                                                Flight.departure_time >= startDate,
+                                                Flight.arrival_time >= endDate)
+
+        return make_response(render_template('search_result.html', flights=available_flights), 200)
 
 
 class TicketAPI(Resource):

@@ -16,6 +16,7 @@ class PassengerSchema(Schema):
 class TicketSchema(Schema):
     id = fields.Int()
     seat_number = fields.Str()
+    price = fields.Float()
     available = fields.Bool()
     plane_id = fields.Int()
 
@@ -29,7 +30,7 @@ class PlaneSchema(Schema):
     model = fields.Str()
     capacity = fields.Int()
     flight_number = fields.Str()
-    tickets = fields.Nested(TicketSchema, only=["id", "seat_number", "available"])
+    tickets = fields.Nested(TicketSchema, many=True, only=["id", "seat_number", "available"])
 
     class Meta:
         # fields = ("id", "model", "capacity", "flight_number")

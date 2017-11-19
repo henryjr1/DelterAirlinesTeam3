@@ -1,93 +1,52 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <title>Delter Airlines Reservation</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
-          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-</head>
-<body>
-<h1>Delter Airlines Reservation!</h1>
-
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
-        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
-        integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
-        crossorigin="anonymous"></script>
-
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script>
-      $( function() {
-        $( "#datepicker" ).datepicker();
-      } );
-
-
-
-
-</script>
-
-<div class="container">
-    <form action="Flight-Search" , method="post" , name="flight-search">
-        {{ form.csrf_token }}
-        <!--{{ form.flying_from(placeholder="Flying from")}}-->
-
-        <div class="row">
-            <div class="col sm">
-                <div class="form-group">
-                    <label for="flying-from">Flying from</label>
-                    <input type="text" class="form-control" id="flying-from" name="flying_from"
-                           aria-describedby="emailHelp" placeholder="Enter source">
-                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
-                </div>
-            </div>
-
-            <div class="col sm">
-                <!--{{ form.flying_to }}-->
-                <div class="form-group">
-                    <label for="flying-to">Flying To</label>
-                    <input type="text" class="form-control" id="flying-to" name="flying_to"
-                           placeholder="Enter destination">
-                </div>
+{% extends "base.html" %}
+{% block content %}
+<form action="Flight-Search" method="get" name="flight-search">
+    {{ form.csrf_token }}
+    {{ form.hidden_tag() }}
+    <div class="row">
+        <div class="col sm">
+            <div class="form-group">
+                <label for="flying-from">Flying from</label>
+                <input type="text" class="form-control" id="flying-from" name="fromLocation"
+                       aria-describedby="emailHelp" placeholder="Enter source">
+                <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
             </div>
         </div>
 
-        <div class="row">
-            <div class="col sm">
-                <div class="form-group">
-                    <label for="departure-date">Departure</label>
-                    <input type="date" class="form-control" id="departure-date" name="departure_date"
-                           placeholder="Pick departure date">
-                </div>
+        <div class="col sm">
+            <!--{{ form.flying_to }}-->
+            <div class="form-group">
+                <label for="flying-to">Flying To</label>
+                <input type="text" class="form-control" id="flying-to" name="toLocation"
+                       placeholder="Enter destination">
             </div>
+        </div>
+    </div>
 
-            <div class="col sm">
-                <div class="form-group">
-                    <label for="arrival-date">Departure</label>
-                    <input type="date" class="form-control" id="arrival-date" name="arrival_date"
-                           placeholder="Pick arrival date">
-                </div>
+    <div class="row">
+        <div class="col sm">
+            <div class="form-group">
+                <label for="departure-date">Expected Departure</label>
+                <input type="date" class="form-control" id="departure-date" name="startDate"
+                       placeholder="Pick departure date">
             </div>
         </div>
 
-        <!--<div class="form-check">-->
-        <!--<label class="form-check-label">-->
-        <!--<input type="checkbox" class="form-check-input">-->
-        <!--Check me out-->
-        <!--</label>-->
-        <!--</div>-->
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-</div>
-</body>
-</html>
+        <div class="col sm">
+            <div class="form-group">
+                <label for="arrival-date">Expected Arrival</label>
+                <input type="date" class="form-control" id="arrival-date" name="endDate"
+                       placeholder="Pick arrival date">
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="form-check">-->
+    <!--<label class="form-check-label">-->
+    <!--<input type="checkbox" class="form-check-input">-->
+    <!--Check me out-->
+    <!--</label>-->
+    <!--</div>-->
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+{% endblock %}

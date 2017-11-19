@@ -46,6 +46,7 @@ class Ticket(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     seat_number = db.Column(db.String(4), nullable=False)
+    price = db.Column(db.Float, nullable=False)
     available = db.Column(db.Boolean, nullable=False)
     plane_id = db.Column(db.Integer, db.ForeignKey('planes.id'), nullable=False)
     plane = db.relationship("Plane")

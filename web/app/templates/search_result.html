@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+    <h2>Flights</h2>
+</div>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <!--<th scope="col">#</th>-->
+        <th scope="col">Departure Time</th>
+        <th scope="col">Arrival Time</th>
+        <th scope="col">Plane</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for flight in flights %}
+    <tr>
+        <td>{{ flight.departure_time }}</td>
+        <td>{{ flight.arrival_time }}</td>
+        <td>{{ flight.plane.model }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
