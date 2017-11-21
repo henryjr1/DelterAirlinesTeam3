@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
+  <?php
+    $TotalIncome =4645; 
+  ?>
   <head>
 
     <meta charset="utf-8">
@@ -30,18 +32,18 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home
+              <a class="nav-link" href="mainpage.php">Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Search for Flight</a>
+              <a class="nav-link" href="pickaflight.php">Search for Flight</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Purchase History</a>
+              <a class="nav-link" href="purchasehistory.php">Purchase History</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Sales</a>
+              <p class ="nav-link"> Total income <?php echo "$" . $TotalIncome?> </p>
             </li>
           </ul>
         </div>

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+  <?php 
+    $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= 151651;
+    
 
+  ?>
   <head>
 
     <meta charset="utf-8">
@@ -31,18 +35,18 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home
+              <a class="nav-link" href="mainpage.php">Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Search for Flight</a>
+              <a class="nav-link" href="pickaflight.php">Search for Flight</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Purchase History</a>
+              <a class="nav-link" href="purchasehistory.php">Purchase History</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Sales</a>
+              <p class ="nav-link"> Total income <?php echo "$" . $TotalIncome?> </p>
             </li>
           </ul>
         </div>
@@ -52,63 +56,60 @@
     <!-- Page Content -->
     <div class="container">
       <h1 class="mt-5">Purchase History</h1>
+      <form name="search" action="purchasehistory.php" method="POST" class="form-inline">
 
-      <form action="narrowsearch.php" method="POST" class="form-inline">
-      
-      <div class="form-group">
-      <label for="sel1">Departure location:</label>
-      <select class="form-control" id="Departing Location">
-        <option>Atlanta</option>
-        <option>Starkville</option>
-      </select>
-      </div>
-      <div class="form-group">
-      <label for="sel1">Destination:</label>
-      <select class="form-control" id="Destiantion">
-        <option>Starkville</option>
-        <option>Atlanta</option>
-      </select>
-      </div>
       <div class="form-group">
       <label for="TicketID">Ticket Id Number:</label>
-      <input type="TicketID" class="form-control -sm" id="TicketID">
+      <input type="text" class="form-control" value="<?php if($TicketID){ echo $TicketID; } ?>" id="TicketID" name="TicketID">
       </div>
 
-      <button type="submit" class="btn btn-default">Submit</button>
-
+      <div>
+      <button id="submit" type="submit" name="submit"  class="btn btn-default" >Submit</button>
+      </div>
+      </form>
+      <?php 
+        if (isset($_POST['submit'])){
+          $TicketID = $_POST['TicketID'];
+        } 
+      ?>
       <table class="table table-hover" id ="search" >
         <thead>
           <tr>
-            <th>Tick Id</th>
+            <th>Ticket ID</th>
+            <th>Price</th>
             <th>Departure Location</th>
-            <th>Destination</th>
-            <th>Departure Time</th>
-            <th>Price<th>
+            <th>Arrival Location<th>
           </tr>
         </thead>
           <tbody>
-            <tr>
-            <script>
-              var table = document.getElementById("search");
-              //while loop: while api flight name is not null to loop thru them   
-              var row = table.insertRow(1);
-              var cell1 = row.insertCell(0);
-              var cell2 = row.insertCell(1);
-              var cell3 = row.insertCell(2);
-              var cell4 = row.insertCell(3);
-              var cell5 = row.insertCell(4);
-              cell1.innerHTML = "NEW CELL1"; //api object call here to fill in the tables 
-              cell2.innerHTML = "NEW CELL2";
-              cell3.innerHTML = "NEW CELL1";
-              cell4.innerHTML = "NEW CELL2";
-              cell5.innerHTML = "NEW CELL2";
+            <?php $counter = 2;
+                  $rowID = 1;
+            ?>
+            
 
-              row.addEventListener("click", (function(){ alert('click'); })); // goes to purchae page 
-           </script>
-           </tr>
+            <?php
+            while($counter >=0){
+              echo "<tr class ='tablerows' id =$rowID>";
+              echo "<td>";
+              echo $TicketID;
+              echo "</td>";
+              echo "<td>";
+              echo $TicketID;
+              echo "</td>";
+              echo "<td>";
+              echo $TicketID;
+              echo "</td>";
+              echo "<td>";
+              echo $TicketID;
+              echo "</td>";
+              echo "</tr>";
+              $counter--;
+            } 
+            ?>
           </tbody>
       </table>  
     </div>
+    
     <!-- /.container -->
 
     <!-- Bootstrap core JavaScript -->
