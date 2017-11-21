@@ -1,37 +1,42 @@
 from datetime import datetime
-from flask_restful import Resource
+from flask_restful import Resource, abort
 from flask import request, render_template, make_response, redirect, url_for
 from app.models import *
 from app.schemas import *
 from app.forms import *
 
 
+class FlightListAPI(Resource):
+
+    def __init__(self):
+        self.flight_schema = FlightSchema(many=True)
+
+    def get(self):
+        flights = Flight.query.all()
+        result = self.flight_schema.dump(flights)
+        return {'flights': result.data}
+
+def abort_if_todo_doesnt_exist(flight_id):
+    flight = Flight.query.get(flight_id)
+    if flight is None:
+        abort(404, message="Flight {} doesn't exist".format(flight_id))
+
 class FlightAPI(Resource):
 
     def __init__(self):
         self.flight_schema = FlightSchema()
-        self.flights_schema = FlightSchema(many=True)
 
-    def get(self):
+    def get(self, flight_id):
         """
         Get the flight request from user and return corresponding flight
         :return: flight given id or all available flights if id is not specified
         """
-        flight_id = request.args.get('id')
-        # print('Flight id = {}'.format(flight_id))
-        if flight_id is not None:
-            # Get all currently available flights
-            flight = Flight.query.get(flight_id)
+        flight = Flight.query.get(flight_id)
+        if flight is not None:
             result = self.flight_schema.dump(flight)
-            # return jsonify(flight.serialize())
             return {'flight': result.data}
         else:
-            # return jsonify(flights=[flight.serialize() for flight in Flight.query.all()])
-            flights = Flight.query.all()
-            # print(flights)
-            result = self.flights_schema.dump(flights)
-            # print(result.data)
-            return {'flights': result.data}
+            abort_if_todo_doesnt_exist(flight_id)
 
 
 class FlightSearchAPI(Resource):
