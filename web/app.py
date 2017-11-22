@@ -10,7 +10,7 @@ api = Api(app, prefix="/api/v1.0")
 api.add_resource(FlightListAPI, '/flights')
 api.add_resource(FlightAPI, '/flights/<string:flight_id>')
 api.add_resource(FlightSearchAPI, '/Flight-Search')
-api.add_resource(TicketAPI, '/tickets')
+api.add_resource(TicketAPI, '/flights/<string:flight_id>/tickets')
 api.add_resource(OrderAPI, '/order')
 
 if __name__ == '__main__':

@@ -22,7 +22,6 @@ class Plane(db.Model):
     model = db.Column(db.String(30), unique=True, nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     flight_number = db.Column(db.String(30), unique=True, nullable=False)
-    tickets = db.relationship("Ticket", backref="planes", lazy="dynamic")
 
     def __repr__(self):
         return '<model = {} --- capacity = {} --- flight number = {}>'.format(self.model, self.capacity, self.flight_number)
@@ -39,6 +38,7 @@ class Flight(db.Model):
     departure_time = db.Column(db.DateTime, nullable=False)
     arrival_time = db.Column(db.DateTime, nullable=False)
     locale = db.Column(db.String(50), nullable=False)
+    tickets = db.relationship("Ticket", backref="flights", lazy="dynamic")
 
 
 class Ticket(db.Model):
@@ -48,8 +48,8 @@ class Ticket(db.Model):
     seat_number = db.Column(db.String(4), nullable=False)
     price = db.Column(db.Float, nullable=False)
     available = db.Column(db.Boolean, nullable=False)
-    plane_id = db.Column(db.Integer, db.ForeignKey('planes.id'), nullable=False)
-    plane = db.relationship("Plane")
+    flight_id = db.Column(db.Integer, db.ForeignKey('flights.id'), nullable=False)
+    flight = db.relationship("Flight")
 
     def __repr__(self):
         return '<seat_number = {} --- available = {} ----'.format(self.seat_number, self.available)

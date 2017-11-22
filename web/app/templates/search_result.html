@@ -9,6 +9,7 @@
     <thead>
     <tr>
         <!--<th scope="col">#</th>-->
+        <th scope="col">FlightID</th>
         <th scope="col">Departure Time</th>
         <th scope="col">Arrival Time</th>
         <th scope="col">Plane</th>
@@ -16,13 +17,25 @@
     </thead>
     <tbody>
     {% for flight in flights %}
-    <tr>
-        <td>{{ flight.departure_time }}</td>
-        <td>{{ flight.arrival_time }}</td>
-        <td>{{ flight.plane.model }}</td>
-    </tr>
+    <form action="/order" method="get">
+        <tr>
+            <td>{{flight.id}}</td>
+            <td>{{ flight.departure_time }}</td>
+            <td>{{ flight.arrival_time }}</td>
+            <td>{{ flight.plane.model }}</td>
+            <td>
+                <button id="place-order" type="button" class="btn btn-info">Select</button>
+            </td>
+        </tr>
+    </form>
     {% endfor %}
     </tbody>
 </table>
 
+<script type="text/javascript">
+    document.getElementById("place-order").onclick = function () {
+        location.href = "/api/v1.0/order";
+    };
+
+</script>
 {% endblock %}

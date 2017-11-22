@@ -30,15 +30,15 @@ def init_db():
     # insert plane data
     plane1 = Plane(model='Boeing 747', capacity=54, flight_number='BOEING_123')
     tickets1 = generate_random_ticket(plane1.capacity)
-    plane1.tickets.extend(tickets1)
+    # plane1.tickets.extend(tickets1)
 
     plane2 = Plane(model='Airbus 322', capacity=72, flight_number='AIRBUS_435')
     tickets2 = generate_random_ticket(plane2.capacity)
-    plane2.tickets.extend(tickets2)
+    # plane2.tickets.extend(tickets2)
 
     plane3 = Plane(model='SpaceX 543', capacity=36, flight_number='SPACEX_653')
     tickets3 = generate_random_ticket(plane3.capacity)
-    plane3.tickets.extend(tickets3)
+    # plane3.tickets.extend(tickets3)
 
     # add to session
     db.session.add(plane1)
@@ -74,13 +74,13 @@ def init_db():
         departure_datetimes.append(departure_datetime)
         arrival_datetimes.append(arrival_datetime)
 
-    flight1 = Flight(source='GTR', destination='Atlanta', locale='Starkville', departure_time=departure_datetimes[0], arrival_time=arrival_datetimes[0])
+    flight1 = Flight(source='GTR', destination='Atlanta', locale='Starkville', departure_time=departure_datetimes[0], arrival_time=arrival_datetimes[0], tickets=tickets1)
     flight1.plane = plane1
 
-    flight2 = Flight(source='Chicago', destination='New York', locale='Starkville', departure_time=departure_datetimes[1], arrival_time=arrival_datetimes[1])
+    flight2 = Flight(source='Chicago', destination='New York', locale='Starkville', departure_time=departure_datetimes[1], arrival_time=arrival_datetimes[1], tickets=tickets2)
     flight2.plane = plane2
 
-    flight3 = Flight(source='LAX', destination='Philadelphia', locale='Atlanta', departure_time=departure_datetimes[2], arrival_time=arrival_datetimes[2])
+    flight3 = Flight(source='LAX', destination='Philadelphia', locale='Atlanta', departure_time=departure_datetimes[2], arrival_time=arrival_datetimes[2], tickets=tickets3)
     flight3.plane = plane3
 
     # add to session

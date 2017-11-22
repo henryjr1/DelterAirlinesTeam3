@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Flight Information</h2>
+
+<h2>Customer Information</h2>
+<form>
+    <div class="row form-group">
+        <div class="col sm">
+            <input type="text" class="form-control" placeholder="First name">
+        </div>
+        <div class="col sm">
+            <input type="text" class="form-control" placeholder="Last name">
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col sm">
+            <input type="text" class="form-control" placeholder="Email">
+        </div>
+        <div class="col sm">
+            <input type="text" class="form-control" placeholder="Address">
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
