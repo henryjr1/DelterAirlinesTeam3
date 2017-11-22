@@ -42,6 +42,9 @@ class FlightAPI(Resource):
 
 class FlightSearchAPI(Resource):
 
+    def __init__(self):
+        self.flight_schema = FlightSchema(many=True)
+
     def get(self):
         """
         /inventory?startDate=2017-11-14T00:00&endDate=2017-11-14T23:59&location=Starkville,%20MS
@@ -66,8 +69,9 @@ class FlightSearchAPI(Resource):
                                                 Flight.destination == to_location,
                                                 Flight.departure_time >= startDate,
                                                 Flight.arrival_time >= endDate)
-
-        return make_response(render_template('search_result.html', flights=available_flights), 200)
+        result = self.flight_schema.dump(available_flights)
+        return {'flights': result.data}
+        # return make_response(render_template('search_result.html', flights=available_flights), 200)
 
 
 class TicketAPI(Resource):
