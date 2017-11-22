@@ -2,7 +2,7 @@
 from flask_restful import Api
 from app import app
 
-from app.views import FlightAPI, FlightSearchAPI, TicketAPI, FlightListAPI, OrderAPI
+from app.views import FlightAPI, FlightSearchAPI, TicketAPI, FlightListAPI, OrderAPI, ResetAPI
 from instance.db_create import init_db
 import time
 
@@ -12,6 +12,7 @@ api.add_resource(FlightAPI, '/flights/<string:flight_id>')
 api.add_resource(FlightSearchAPI, '/Flight-Search')
 api.add_resource(TicketAPI, '/flights/<string:flight_id>/tickets')
 api.add_resource(OrderAPI, '/order')
+api.add_resource(ResetAPI, '/reset')
 
 if __name__ == '__main__':
     dbstatus = False

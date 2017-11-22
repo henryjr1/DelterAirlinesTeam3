@@ -4,6 +4,7 @@ from flask import request, render_template, make_response, jsonify
 from app.models import *
 from app.schemas import *
 from app.forms import *
+from instance.db_create import init_db
 
 
 class FlightListAPI(Resource):
@@ -99,3 +100,12 @@ class OrderAPI(Resource):
 
     def delete(self):
         pass
+
+
+class ResetAPI(Resource):
+    """
+    Reset database to the original data for testing purpose
+    """
+    def get(self):
+        init_db()
+        return jsonify({"Message":"Reset successfully!"})
