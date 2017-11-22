@@ -24,10 +24,12 @@ Say what the step will be
 ```
 2. Create .env file at the root of project
 
+#### -- **No spaces around _equal signs_, no _single quotes_**
+
 ```
-    POSTGRES_USER='your-postgres-user'
-    POSTGRES_PASSWORD='your-password'
-    POSTGRES_DB='your-db'
+    POSTGRES_USER=your-postgres-user
+    POSTGRES_PASSWORD=your-password
+    POSTGRES_DB=your-db
 ```
 
 3. Update corresponding information in configuration file at web/instance/flask.cfg
