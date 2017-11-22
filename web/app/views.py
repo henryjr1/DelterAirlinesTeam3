@@ -1,10 +1,16 @@
 from datetime import datetime
-from flask_restful import Resource, abort
+from flask_restful import Resource, abort, reqparse
 from flask import request, render_template, make_response, jsonify
+from datetime import datetime
 from app.models import *
 from app.schemas import *
 from app.forms import *
 from instance.db_create import init_db
+
+# This is a YYYY-MM-DDTHH:mm:ss format using 24-hour
+# time and leading zeros (e.g. “2017-09-03T15:04:00”)
+
+DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 
 
 class FlightListAPI(Resource):
@@ -26,6 +32,9 @@ class FlightAPI(Resource):
 
     def __init__(self):
         self.flight_schema = FlightSchema()
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('startDate')
+        self.parser.add_argument('endDate')
 
     def get(self, flight_id):
         """
@@ -38,6 +47,34 @@ class FlightAPI(Resource):
             return {'flight': result.data}
         else:
             abort_if_todo_doesnt_exist(flight_id)
+
+    def put(self, flight_id):
+        """
+        Update flight's departing time and arriving time
+        """
+        updated_flight = Flight.query.get(flight_id)
+        if updated_flight is None:
+            return {'Message': 'Flight with id = {} is not available!'.format(flight_id)}, 404
+
+        args = self.parser.parse_args()
+        updated_start_date = args['startDate']
+        updated_end_date = args['endDate']
+
+        # Catch exception and return error message to user
+        # if updated datetime don't follow specified format
+        try:
+            updated_start_date = datetime.strptime(updated_start_date, DATE_TIME_FORMAT)
+            updated_end_date = datetime.strptime(updated_end_date, DATE_TIME_FORMAT)
+        except ValueError:
+            return {'Error': 'Updated datetime should follow format YYYY-MM-DDTHH:mm:ss'}, 400
+
+        # data is valid. Update record in database
+        updated_flight.departure_time = updated_start_date
+        updated_flight.arrival_time = updated_end_date
+        db.session.commit()
+
+        result = self.flight_schema.dump(updated_flight)
+        return {'flight': result.data}
 
 
 class FlightSearchAPI(Resource):
