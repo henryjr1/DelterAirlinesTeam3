@@ -44,6 +44,8 @@ class FlightSchema(Schema):
     plane = fields.Nested(PlaneSchema)
     startDate = fields.DateTime(attribute="departure_time")
     endDate = fields.DateTime(attribute="arrival_time")
+    departingZipCode = fields.DateTime(attribute="departure_zip_code")
+    arrivingZipCode = fields.DateTime(attribute="arrival_zip_code")
     locale = fields.DateTime()
     tickets = fields.Nested(TicketSchema, many=True, only=["id", "seat_number", "available"])
 

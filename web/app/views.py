@@ -110,6 +110,30 @@ class FlightSearchAPI(Resource):
         return {'flights': result.data}
         # return make_response(render_template('search_result.html', flights=available_flights), 200)
 
+class FlightSearchByDepartingZipCodeAPI(Resource):
+    """
+    Search available flights by departing zip code
+    """
+    def __init__(self):
+        self.flight_schema = FlightSchema(many=True)
+
+    def get(self, zip_code):
+        flights = Flight.query.filter(Flight.departure_zip_code==zip_code)
+        result = self.flight_schema.dump(flights)
+        return {'flights': result.data}
+
+class FlightSearchByArrivingZipCodeAPI(Resource):
+    """
+    Search available flights by arriving zip code
+    """
+    def __init__(self):
+        self.flight_schema = FlightSchema(many=True)
+
+    def get(self, zip_code):
+        flights = Flight.query.filter(Flight.arrival_zip_code==zip_code)
+        result = self.flight_schema.dump(flights)
+        return {'flights': result.data}
+
 
 class TicketAPI(Resource):
     def __init__(self):

@@ -4,7 +4,6 @@ Generate sample database for the web app
 #--------------------------------------#
 '''
 
-
 from app.models import *
 from app.common.util import generate_random_ticket
 import datetime
@@ -12,16 +11,21 @@ import random
 
 # create the database table and make-up data
 
+ZIP_CODE = {'GTR': 39759, "LAX": 23445, 'Chicago': 38453, 'Atlanta': 32484, 'New York': 98754, 'Philadelphia': 23446}
+
+
 def init_db():
     print('Start creating database...')
     db.drop_all()
     db.create_all()
 
     # insert user data
-    passenger1 = Passenger(name='Bob', dob=datetime.date(1994, 4, 16), email='bob@cse.msstate.edu', address='Butler Hall')
+    passenger1 = Passenger(name='Bob', dob=datetime.date(1994, 4, 16), email='bob@cse.msstate.edu',
+                           address='Butler Hall')
     passenger2 = Passenger(name='Alice', dob=datetime.date(1954, 3, 25), email='alice@cse.msstate.edu',
                            address='Butler Hall')
-    passenger3 = Passenger(name='Jack', dob=datetime.date(1976, 6, 23), email='jack@cse.msstate.edu', address='Butler Hall')
+    passenger3 = Passenger(name='Jack', dob=datetime.date(1976, 6, 23), email='jack@cse.msstate.edu',
+                           address='Butler Hall')
     # add to session
     db.session.add(passenger1)
     db.session.add(passenger2)
@@ -74,13 +78,19 @@ def init_db():
         departure_datetimes.append(departure_datetime)
         arrival_datetimes.append(arrival_datetime)
 
-    flight1 = Flight(source='GTR', destination='Atlanta', locale='Starkville', departure_time=departure_datetimes[0], arrival_time=arrival_datetimes[0], tickets=tickets1)
+    flight1 = Flight(source='GTR', destination='Atlanta', locale='Starkville', departure_time=departure_datetimes[0],
+                     departure_zip_code=ZIP_CODE['GTR'],
+                     arrival_time=arrival_datetimes[0], arrival_zip_code=ZIP_CODE['Atlanta'], tickets=tickets1)
     flight1.plane = plane1
 
-    flight2 = Flight(source='Chicago', destination='New York', locale='Starkville', departure_time=departure_datetimes[1], arrival_time=arrival_datetimes[1], tickets=tickets2)
+    flight2 = Flight(source='Chicago', destination='New York', locale='Starkville',
+                     departure_time=departure_datetimes[1], departure_zip_code=ZIP_CODE['Chicago'],
+                     arrival_time=arrival_datetimes[1], arrival_zip_code=ZIP_CODE['New York'], tickets=tickets2)
     flight2.plane = plane2
 
-    flight3 = Flight(source='LAX', destination='Philadelphia', locale='Atlanta', departure_time=departure_datetimes[2], arrival_time=arrival_datetimes[2], tickets=tickets3)
+    flight3 = Flight(source='LAX', destination='Philadelphia', locale='Atlanta', departure_time=departure_datetimes[2],
+                     departure_zip_code=ZIP_CODE['LAX'],
+                     arrival_time=arrival_datetimes[2], arrival_zip_code=ZIP_CODE['Philadelphia'], tickets=tickets3)
     flight3.plane = plane3
 
     # add to session

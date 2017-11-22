@@ -36,7 +36,9 @@ class Flight(db.Model):
     plane_id = db.Column(db.Integer, db.ForeignKey('planes.id'))
     plane = db.relationship("Plane", backref=db.backref('flights', lazy=True))
     departure_time = db.Column(db.DateTime, nullable=False)
+    departure_zip_code = db.Column(db.Integer, nullable=False)
     arrival_time = db.Column(db.DateTime, nullable=False)
+    arrival_zip_code = db.Column(db.Integer, nullable=False)
     locale = db.Column(db.String(50), nullable=False)
     tickets = db.relationship("Ticket", backref="flights", lazy="dynamic")
 
