@@ -98,6 +98,28 @@ def init_db():
     db.session.add(flight2)
     db.session.add(flight3)
 
+
+    # randomly create sample transactions
+    created_transaction = 0
+    passengers = [passenger1, passenger2, passenger3]
+    while (created_transaction < 10):
+        selected_ticket_set = random.randint(1, 3)
+        if selected_ticket_set == 1:
+            ticket = random.choice(tickets1)
+        elif selected_ticket_set == 2:
+            ticket = random.choice(tickets2)
+        else:
+            ticket = random.choice(tickets3)
+
+        if ticket.available == False:
+            continue
+
+        # booked_datetime = random.choice(departure_datetime)
+        ticket.available = False
+        transaction = Transaction(passenger=random.choice(passengers), ticket=ticket)
+        db.session.add(transaction)
+        created_transaction += 1
+
     # commit the changes
     db.session.commit()
 

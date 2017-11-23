@@ -2,14 +2,13 @@ from marshmallow import Schema, fields
 
 
 class PassengerSchema(Schema):
-    # id = fields.Int()
-    # name = fields.Str()
-    # dob = fields.DateTime()
-    # email = fields.Email()
-    # address = fields.Str()
+    id = fields.Int()
+    name = fields.Str()
+    dob = fields.DateTime()
+    email = fields.Email()
+    address = fields.Str()
 
     class Meta:
-        fields = ("id", "name", "dob", "email", "address")
         ordered = True
 
 
@@ -20,9 +19,8 @@ class TicketSchema(Schema):
     available = fields.Bool()
     flight_id = fields.Int()
 
-    # class Meta:
-    #     fields = ("id", "seat_number", "available", "plane_id")
-    #     ordered = True
+    class Meta:
+        ordered = True
 
 
 class PlaneSchema(Schema):
@@ -32,7 +30,6 @@ class PlaneSchema(Schema):
     flight_number = fields.Str()
 
     class Meta:
-        # fields = ("id", "model", "capacity", "flight_number")
         ordered = True
 
 
@@ -50,6 +47,11 @@ class FlightSchema(Schema):
     tickets = fields.Nested(TicketSchema, many=True, only=["id", "seat_number", "available"])
 
     class Meta:
-        # fields = ("id", "source", "destination", "plane", "departure_time", "arrival_time", "locale")
         ordered = True
 
+class TransactionSchema(Schema):
+    passenger = fields.Nested(PassengerSchema)
+    ticket = fields.Nested(TicketSchema)
+
+    class Meta:
+        ordered = True

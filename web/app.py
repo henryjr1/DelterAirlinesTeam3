@@ -14,7 +14,8 @@ api.add_resource(FlightSearchAPI, '/Flight-Search')
 api.add_resource(TicketAPI, '/flights/<string:flight_id>/tickets')
 api.add_resource(FlightSearchByDepartingZipCodeAPI, '/flights/departing/<string:zip_code>')
 api.add_resource(FlightSearchByArrivingZipCodeAPI, '/flights/arriving/<string:zip_code>')
-api.add_resource(OrderAPI, '/order')
+api.add_resource(OrderAPI, '/purchases/order')
+api.add_resource(PurchaseHistoryAPI,'/purchases')
 api.add_resource(ResetAPI, '/reset')
 
 if __name__ == '__main__':
@@ -28,4 +29,4 @@ if __name__ == '__main__':
         else:
             dbstatus = True
 
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0", use_reloader=False)

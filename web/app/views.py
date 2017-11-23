@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask_restful import Resource, abort, reqparse
-from flask import request, render_template, make_response, jsonify
+from flask import request, render_template, make_response, jsonify, redirect
 from datetime import datetime
 from app.models import *
 from app.schemas import *
@@ -11,6 +11,7 @@ from instance.db_create import init_db
 # time and leading zeros (e.g. “2017-09-03T15:04:00”)
 
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
+DATE_OF_BIRTH_FORMAT = '%Y-%m-%d'
 
 
 class FlightListAPI(Resource):
@@ -152,19 +153,68 @@ class TicketAPI(Resource):
 
 
 class OrderAPI(Resource):
+    """
+    + Place an order
+    + Cancel an order
+    """
+
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('ticketID') # ticket id
+        self.parser.add_argument('name')     # customer name
+        self.parser.add_argument('dob')      # date of birth
+        self.parser.add_argument('email')    # email
+        self.parser.add_argument('address')  # address
 
     def get(self):
         form = PlaceOrderForm(request.form)
         return make_response(render_template('order_ticket.html', form=form), 200, {'Content-Type': 'text/html'})
 
     def post(self):
-        pass
+        args = self.parser.parse_args()
+        ticket_id = args['ticketID']
+        name = args['name']
+        dob = args['dob']
+        email = args['email']
+        address = args['address']
+
+        bought_ticket = Ticket.query.get(ticket_id)
+
+        if bought_ticket == None:
+            return {'Error:': 'Ticket of id {} does not exist!'.format(ticket_id)}, 404
+
+        if bought_ticket.available == False:
+            return {'Info': 'Selected ticket is unavailable!'}, 200
+        else:
+            try:
+                dob = datetime.strptime(dob, DATE_OF_BIRTH_FORMAT)
+            except ValueError:
+                return {'Error': 'Date of birth format is incorrect!'}, 400
+
+            bought_ticket.available = False
+            passenger = Passenger(name=name, dob=dob, email=email, address=address)
+            transaction = Transaction(passenger=passenger, ticket=bought_ticket)
+
+            db.session.add(transaction)
+            db.session.commit()
+
+            return redirect('/api/v1.0/purchases', 201)
 
     def put(self):
         pass
 
     def delete(self):
         pass
+
+class PurchaseHistoryAPI(Resource):
+
+    def __init__(self):
+        self.transaction_schema = TransactionSchema(many=True)
+
+    def get(self):
+        transactions = Transaction.query.all()
+        result = self.transaction_schema.dump(transactions)
+        return {'purchases': result.data}
 
 
 class ResetAPI(Resource):

@@ -69,13 +69,13 @@ class Transaction(db.Model):
     __tablename__ = 'transactions'
 
     id = db.Column(db.Integer, primary_key=True)
-    booking_date_time = db.Column(db.DateTime, nullable=False)
+    # booking_date_time = db.Column(db.DateTime, nullable=False)
 
     passenger_id = db.Column(db.Integer, db.ForeignKey('passengers.id'))
     passenger = db.relationship('Passenger', backref='transactions')
 
-    flight_id = db.Column(db.Integer, db.ForeignKey('flights.id'))
-    flight = db.relationship('Flight', backref='transactions')
+    ticket_id = db.Column(db.Integer, db.ForeignKey('tickets.id'))
+    ticket = db.relationship('Ticket', backref='transactions')
 
-    airfare_id = db.Column(db.Integer, db.ForeignKey('airfares.id'))
-    airfare = db.relationship('AirFare', backref='transactions')
+    # airfare_id = db.Column(db.Integer, db.ForeignKey('airfares.id'))
+    # airfare = db.relationship('AirFare', backref='transactions')
