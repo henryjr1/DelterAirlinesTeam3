@@ -1,6 +1,7 @@
-from datetime import datetime
+# views.py
 from flask_restful import Resource, abort, reqparse
 from flask import request, render_template, make_response, jsonify, redirect
+from sqlalchemy import func
 from datetime import datetime
 from app.models import *
 from app.schemas import *
@@ -212,9 +213,14 @@ class PurchaseHistoryAPI(Resource):
         self.transaction_schema = TransactionSchema(many=True)
 
     def get(self):
+        revenue = 0.0
         transactions = Transaction.query.all()
+        for transaction in transactions:
+            revenue += transaction.ticket.price
         result = self.transaction_schema.dump(transactions)
-        return {'purchases': result.data}
+        return {'purchase_history': {
+                    'total_revenue': '${:,.2f}'.format(revenue),
+                    'purchases': result.data}}
 
 
 class ResetAPI(Resource):
