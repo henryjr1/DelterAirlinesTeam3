@@ -90,27 +90,41 @@ class FlightSearchAPI(Resource):
 
         :return:
         """
+        available_flights = self.get_available_flight(request.args)
+        result = self.flight_schema.dump(available_flights)
+        return {'flights': result.data}
+
+    def get_available_flight(self, args):
+        """
+        :return: a list of available flight given search queries
+        """
+        if len(args) == 0:
+            return []
+        from_location = args['fromLocation']
+        to_location = args['toLocation']
+        start_date = datetime.strptime(args['startDate'], '%Y-%m-%d')
+        end_date = datetime.strptime(args['endDate'], '%Y-%m-%d')
+
+        available_flights = Flight.query.filter(Flight.source == from_location,
+                                                Flight.destination == to_location,
+                                                Flight.departure_time >= start_date,
+                                                Flight.arrival_time >= end_date)
+
+        return available_flights
+
+class FlightSearch(FlightSearchAPI):
+    def __init__(self):
+        super().__init__()
+
+    def get(self):
         args = request.args
         if len(args) == 0:
             form = FlightSearchForm(request.form)
             headers = {'Content-Type': 'text/html'}
             return make_response(render_template('flight_search.html', form=form), 200, headers)
 
-        from_location = args['fromLocation']
-        to_location = args['toLocation']
-        startDate = args['startDate']
-        endDate = args['endDate']
-
-        startDate = datetime.strptime(startDate, '%Y-%m-%d')
-        endDate = datetime.strptime(endDate, '%Y-%m-%d')
-
-        available_flights = Flight.query.filter(Flight.source == from_location,
-                                                Flight.destination == to_location,
-                                                Flight.departure_time >= startDate,
-                                                Flight.arrival_time >= endDate)
-        result = self.flight_schema.dump(available_flights)
-        return {'flights': result.data}
-        # return make_response(render_template('search_result.html', flights=available_flights), 200)
+        available_flights = self.get_available_flight(args)
+        return make_response(render_template('search_result.html', flights=available_flights), 200)
 
 class FlightSearchByDepartingZipCodeAPI(Resource):
     """

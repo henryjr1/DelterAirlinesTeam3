@@ -18,6 +18,10 @@ api.add_resource(OrderAPI, '/purchases/order')
 api.add_resource(PurchaseHistoryAPI,'/purchases')
 api.add_resource(ResetAPI, '/reset')
 
+
+gui_api = Api(app)
+gui_api.add_resource(FlightSearch, '/Flight-Search')
+
 if __name__ == '__main__':
     dbstatus = False
     while dbstatus == False:
