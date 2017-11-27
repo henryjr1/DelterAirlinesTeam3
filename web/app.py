@@ -1,5 +1,6 @@
 #!flask/bin/python
 from flask_restful import Api
+from flask_cors import CORS
 from app import app
 
 from app.views import *
@@ -8,6 +9,7 @@ import time
 import traceback
 
 api = Api(app, prefix="/api/v1.0")
+
 api.add_resource(FlightListAPI, '/flights')
 api.add_resource(FlightAPI, '/flights/<string:flight_id>')
 api.add_resource(FlightSearchAPI, '/Flight-Search')
@@ -22,6 +24,7 @@ api.add_resource(ResetAPI, '/reset')
 gui_api = Api(app)
 gui_api.add_resource(FlightSearch, '/Flight-Search')
 
+CORS(app)
 if __name__ == '__main__':
     dbstatus = False
     while dbstatus == False:
