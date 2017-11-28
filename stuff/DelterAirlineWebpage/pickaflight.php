@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php 
-    $Destination =NULL; $Children =""; $Adults =""; $departingLocation =NULL; $Name=""; $TotalIncome =545; $ExpectedDeparture=''; $ExpectedArrival=''; 
-    $tablDepartingLocation = NULL; $tableArrivingLocation = NULL; $Seat = array(); 
+    $Destination =NULL; $Children =""; $Adults =""; $departingLocation =NULL; $Name=""; $TotalIncome =545; 
+    $ExpectedDeparture=''; $ExpectedArrival=''; $tablDepartingLocation = NULL; $tableArrivingLocation = NULL; 
+    $Seat = array(); $SeatNumber = ''; $TicketId = ''; $ticket = array();  
     $url ="http://35.188.55.177/api/v1.0/Flight-Search";
     $query ="";
 
@@ -163,6 +164,7 @@
         $return = curl_exec ($ch);
         curl_close ($ch);
         ?>
+        
       <table class="table table-hover" id ="search" >
         <thead>
           <tr>
@@ -187,19 +189,20 @@
                      foreach($values['tickets'] as $moos){
                           if ($moos['available'] == 1){
                           array_push($Seat, $moos['seat_number']);
+                          array_push($ticket, $moos['id']);
                         }
                      }
                   }
               }       
                 echo $Seat[0];
-                echo $totalRow = count($Seat);
-                echo $counter;
+                echo $ticket[0];
+                $totalRow = count($Seat);
             ?>
             
 
             <?php
             while($counter  < $totalRow){
-              echo "<tr onClick=location.href='confirmPurchase.php' class ='tablerows' id =$rowID>";
+              echo "<tr onClick=location.href='confirmPurchase.php?id=".$ticket[$counter]."&seat=".$Seat[$counter]."' class ='tablerows' id =$rowID>";
               echo "<td>";
               echo $rowID;
               echo "</td>";
@@ -219,6 +222,10 @@
               $counter++;
               $rowID++;
             } 
+            ?>
+            <?php
+            session_start();
+            $_SESSION['departingLocation'] = $departingLocation;
             ?>
           </tbody>
       </table>  

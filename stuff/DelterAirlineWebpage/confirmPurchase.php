@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+  <?php 
+    $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= 151651; 
+    $email=NULL; ;$fName=NULL; $lName=Null; $address= Null; $SeatNumber = Null;
+    
 
+  ?>
   <head>
-    <?php
-    $TotalIncome =4645; $test=''; 
-    ?>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -16,25 +19,25 @@
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <style>
-      body {
-        padding-top: 54px;
-      }
-      @media (min-width: 992px) {
-        body {
-          padding-top: 56px;
-        }
-      }
-    </style>
+    <link href="css/history.css" rel="stylesheet">
 
   </head>
 
   <body>
+    <?php
+      session_start();
+      $departingLocation = $_SESSION['departingLocation'];
+      $Destination = $_SESSION['Destination'];
+      $TicketID =  $_GET['id'];
+      $SeatNumber =  $_GET['seat'];
+      echo $rowID;
 
+      ?>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="#">Delter Airlines</a>
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -58,20 +61,45 @@
         </div>
       </div>
     </nav>
-
-    <!-- Page Content -->
     <div class="container">
       <div class="row">
         <div class="col-lg-12 text-center">
-          <h1 class="mt-5">Do You Want to Confirm Your Purchase?</h1>
-          <p class="lead">The info about your flight is displayed below.</p>
+          <h1 class="mt-5">Info about Your Flight </h1>
           <ul class="list-unstyled">
-            <li>Bootstrap 4.0.0-beta</li>
-            <li>jQuery 3.2.1</li>
+            <li style = 'font-size: 30px'>Flight Destination: <?php  $Destination?></li>
+            <li style = 'font-size: 30px'>Flight Departure Location: <?php $departingLocation?></li>
+            <li style = 'font-size: 30px'>Seat Number: <?php $SeatNumber?></li>
+            <li style = 'font-size: 30px'>TicketID: <?php $TicketID?></li>
           </ul>
         </div>
       </div>
     </div>
+    <!-- Page Content -->
+    <div class="container">
+      <h1 class="mt-5">Confirm Purchase</h1>
+      
+      <form name="search" action="purchasehistory.php" method="POST" class="form">
+      <div class="form-group">
+      <label for="fname">First Name:</label>
+      <input type="text" class="form-control" value="<?php if($fName){ echo $fName; } ?>" id="fName" name="fName">
+      <label for="lName">Last Name:</label>
+      <input type="text" class="form-control" value="<?php if($lName){ echo $lName; } ?>" id="lName" name="lName">
+      <label for="email">Email:</label>
+      <input type="text" class="form-control" value="<?php if($email){ echo $email; } ?>" id="email" name="email">
+      <label for="address">Address:</label>
+      <input type="text" class="form-control" value="<?php if($address){ echo $address; } ?>" id="address" name="address">
+      </div>
+      <div>
+      <button id="submit" type="submit" name="submit"  class="btn btn-default" >Confirm Purchase</button>
+      </div>
+      </form>
+      <?php 
+        if (isset($_POST['submit'])){
+          $TicketID = $_POST['TicketID'];
+        } 
+      ?>
+    
+    <!-- /.container -->
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
