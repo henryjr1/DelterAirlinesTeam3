@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php 
-    $Destination =''; $Children =""; $Adults =""; $departingLocation =''; $Name=""; $TotalIncome =545; $ExpectedDeparture=''; $ExpectedArrival='';
+    $Destination =NULL; $Children =""; $Adults =""; $departingLocation =NULL; $Name=""; $TotalIncome =545; $ExpectedDeparture=''; $ExpectedArrival=''; 
+    $tablDepartingLocation = NULL; $tableArrivingLocation = NULL; $Seat = array(); 
     $url ="http://35.188.55.177/api/v1.0/Flight-Search";
-    $query = '';
-    $url_final = $url.'?'.$query;
+    $query ="";
 
-    $ch = curl_init();
-
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HTTPGET, 1);
-    curl_setopt($ch, CURLOPT_URL, $url_final);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $return = curl_exec ($ch);
-    curl_close ($ch);
-
+  
     
   ?>
   <script>
@@ -84,7 +75,7 @@
       <label for="depatingLocation">Departure location:</label>
       <select class="form-control" id="departingLocation" name="departingLocation">
         <option  disabled selected value>select an option</option>
-        <option value="GTR">Atlanta</option>
+        <option value="LAX">Atlanta</option>
         <option value="Starkville">Starkville</option>
       </select>
       </div>
@@ -92,7 +83,7 @@
       <label for="Destination">Destination:</label>
       <select class="form-control" id="Destination" name="Destination" >
         <option disabled selected value>select an option</option>
-        <option value="Starkville">Starkville</option>
+        <option value="Philadelphia">Starkville</option>
         <option value="Atlanta">Atlanta</option>
       </select>
       </div>
@@ -136,11 +127,11 @@
           $ExpectedArrival = $_POST['endDate'];
           $Name = $_POST['Name'];
         } 
-        if ($Destination != ''){
-          if ($query !=''){
+        if ($Destination != NULL){
+          if ($query !=NULL){
             $query .= '&';
           }
-          $query .= 'toLocation=' . $Destination;
+          $query .= 'toLocation=' . $Destination;  
         }
         if ($Destination != ''){
           if ($query !=''){
@@ -161,44 +152,72 @@
           $query .= 'endDate=' . $ExpectedArrival;
         }
         
-      ?>
+        $url_final = $url . '?' . $query;
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch, CURLOPT_URL, $url_final);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $return = curl_exec ($ch);
+        curl_close ($ch);
+        ?>
       <table class="table table-hover" id ="search" >
         <thead>
           <tr>
+            <th></th>
             <th>Departure Location</th>
             <th>Arrival Location</th>
-            <th>Departure Time</th>
-            <th>Availible Tickets</th>
+            <th>Availible Seats</th>
             <th>Price<th>
           </tr>
         </thead>
           <tbody>
-            <?php $counter = 2;
-                  $rowID = 1;
-                  echo $return;
-                  ?>
+            <?php 
+
+              $counter = 0;
+              $rowID = 1;
+              $array = (json_decode($return, true));
+              print_r($array);
+              foreach ($array as $level1) {  
+                  foreach($level1 as $values)   { 
+                      $tablDepartingLocation = $values['fromLocation'];
+                      $tableArrivingLocation = $values['toLocation'];
+                     foreach($values['tickets'] as $moos){
+                          if ($moos['available'] == 1){
+                          array_push($Seat, $moos['seat_number']);
+                        }
+                     }
+                  }
+              }       
+                echo $Seat[0];
+                echo $totalRow = count($Seat);
+                echo $counter;
+            ?>
             
 
             <?php
-            while($counter >=0){
+            while($counter  < $totalRow){
               echo "<tr onClick=location.href='confirmPurchase.php' class ='tablerows' id =$rowID>";
               echo "<td>";
-              echo $departingLocation;
+              echo $rowID;
               echo "</td>";
               echo "<td>";
-              echo $Destination;
+              echo $tablDepartingLocation;
               echo "</td>";
               echo "<td>";
-              echo $Name;
-              echo "</td>";
+              echo $tableArrivingLocation;
+              echo "</td>";;
               echo "<td>";
-              echo $ExpectedDeparture;
+              echo $Seat[$counter];
               echo "</td>";
               echo "<td>";
               echo $ExpectedArrival;
               echo "</td>";
               echo "</tr>";
-              $counter--;
+              $counter++;
+              $rowID++;
             } 
             ?>
           </tbody>
