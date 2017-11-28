@@ -7,7 +7,16 @@
     $Seat = array(); $SeatNumber = ''; $TicketId = ''; $ticket = array();  
     $url ="http://35.188.55.177/api/v1.0/Flight-Search";
     $query ="";
-    
+
+  //!!!!API Stuff!!!!
+  //Delter API Key
+  $apiKey = "AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM";
+
+  //Starkville Airport
+  //echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Golden+Triangle+Regional+Airport,Starkville,MS&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Test'>" ;
+  //Atlanta Georgia
+  //echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Hartsfield+Jackson+Atlanta+International,Atlanta,GA&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Atlanta Airport'>" ;
+  //!!!!API Stuff!!!!
   
     
   ?>
