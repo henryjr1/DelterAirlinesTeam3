@@ -86,17 +86,17 @@ def init_db():
         departure_datetimes.append(departure_datetime)
         arrival_datetimes.append(arrival_datetime)
 
-    flight1 = Flight(source=STARKVILLE_LOCALE, destination=STARKVILLE_LOCALE, locale=STARKVILLE_LOCALE, departure_time=departure_datetimes[0],
+    flight1 = Flight(source=STARKVILLE_LOCALE, destination=ATLANTA_LOCALE, locale=STARKVILLE_LOCALE, departure_time=departure_datetimes[0],
                      departure_zip_code=ZIP_CODE[STARKVILLE_LOCALE],
                      arrival_time=arrival_datetimes[0], arrival_zip_code=ZIP_CODE[ATLANTA_LOCALE], tickets=tickets1)
     flight1.plane = plane1
 
-    flight2 = Flight(source=STARKVILLE_LOCALE, destination=STARKVILLE_LOCALE, locale=STARKVILLE_LOCALE, departure_time=departure_datetimes[1],
+    flight2 = Flight(source=STARKVILLE_LOCALE, destination=ATLANTA_LOCALE, locale=STARKVILLE_LOCALE, departure_time=departure_datetimes[1],
                      departure_zip_code=ZIP_CODE[STARKVILLE_LOCALE],
                      arrival_time=arrival_datetimes[1], arrival_zip_code=ZIP_CODE[ATLANTA_LOCALE], tickets=tickets2)
     flight2.plane = plane2
 
-    flight3 = Flight(source=STARKVILLE_LOCALE, destination=STARKVILLE_LOCALE, locale=STARKVILLE_LOCALE, departure_time=departure_datetimes[2],
+    flight3 = Flight(source=STARKVILLE_LOCALE, destination=ATLANTA_LOCALE, locale=STARKVILLE_LOCALE, departure_time=departure_datetimes[2],
                      departure_zip_code=ZIP_CODE[STARKVILLE_LOCALE],
                      arrival_time=arrival_datetimes[2], arrival_zip_code=ZIP_CODE[ATLANTA_LOCALE], tickets=tickets3)
     flight3.plane = plane3
