@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php
-    $TotalIncome =4645; 
+    $TotalIncome =4645; $test=''; 
   ?>
   <head>
 
@@ -97,11 +97,13 @@
           <div class="card">
             <img class="card-img-top" src="https://images1.apartments.com/i2/dvFy7HLBs29BRffZJ57E6Wa-OAz52CICLzBW_WPOY7M/110/atlanta-ga-the-atlanta-skyline-at-dusk.jpg" alt="">
             <div class="card-body">
-              <h4 class="card-title">Flights to Atlanta, Ga</h4>
+              <h4 class="card-title">Buy a Ticket Today!</h4>
               <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque sequi doloribus.</p>
             </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Start Your Adventure Here!</a>
+            <div class="card-footer"> 
+              <div>
+                <a href="pickaflight.php" class="btn btn-primary">Start Your Adventure Here!</a>
+              </div>
             </div>
           </div>
         </div>
@@ -109,11 +111,11 @@
           <div class="card">
             <img class="card-img-top" src="http://insideblackbox.com/wp-content/uploads/2016/06/OntheTown-StarkvilleMS-Q2.15-Header-696x464-696x464.jpg" alt="">
             <div class="card-body">
-              <h4 class="card-title">Flights to Starkville, MS</h4>
+              <h4 class="card-title">View Past Orders</h4>
               <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque sequi doloribus totam ut praesentium aut.</p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary">Start Your Adventure Here!</a>
+              <a href="purchasehistory.php" class="btn btn-primary">Look back to the Past!</a>
             </div>
           </div>
         </div>
@@ -147,7 +149,6 @@
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
   </body>
 
 </html>

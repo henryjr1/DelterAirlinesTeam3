@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php 
-    $Destination =""; $Children =""; $Adults =""; $departingLocation =""; $Name=""; $TotalIncome =545; 
-    
+    $Destination =''; $Children =""; $Adults =""; $departingLocation =''; $Name=""; $TotalIncome =545; $ExpectedDeparture=''; $ExpectedArrival='';
+    $url ="http://35.188.55.177/api/v1.0/Flight-Search";
+    $query = '';
+    $url_final = $url.'?'.$query;
 
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HTTPGET, 1);
+    curl_setopt($ch, CURLOPT_URL, $url_final);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $return = curl_exec ($ch);
+    curl_close ($ch);
+
+    
   ?>
-  
+  <script>
+  </script>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -49,6 +63,7 @@
               <p class ="nav-link"> Total income <?php echo "$" . $TotalIncome?> </p>
             </li>
           </ul>
+
         </div>
       </div>
     </nav>
@@ -68,60 +83,84 @@
       <div class="form-group">
       <label for="depatingLocation">Departure location:</label>
       <select class="form-control" id="departingLocation" name="departingLocation">
-        <option value="Atlanta">Atlanta</option>
+        <option  disabled selected value>select an option</option>
+        <option value="GTR">Atlanta</option>
         <option value="Starkville">Starkville</option>
       </select>
       </div>
       <div class="form-group">
       <label for="Destination">Destination:</label>
       <select class="form-control" id="Destination" name="Destination" >
+        <option disabled selected value>select an option</option>
         <option value="Starkville">Starkville</option>
         <option value="Atlanta">Atlanta</option>
       </select>
       </div>
+      <div class="container">
+      <div class="row">
+        <div class="col-sm-push-1">
+            <div class="form-group">
+                <label for="departure-date">Expected Departure</label>
+                <input type="date" class="form-control" id="departure-date" name="startDate"
+                       placeholder="Pick departure date">
+            </div>
+        </div>
+
+        <div class="col-sm-push-1">
+            <div class="form-group">
+                <label for="arrival-date">Expected Arrival</label>
+                <input type="date" class="form-control" id="arrival-date" name="endDate"
+                       placeholder="Pick arrival date">
+            </div>
+        </div>
+   
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+        </script>
+ 
 
 
-      <div class="form-group">
-      <label for="Adults">Adults:</label>
-      <select class="form-control" id="Adults" name="Adults">  
-        <option value = 0>0</option>
-        <option value = 1>1</option>
-        <option value = 2>2</option>
-        <option value = 3>3</option>
-        <option value = 4>4</option>
-        <option value = 5>5</option> 
-        <option value = 6>6</option>
-        <option value = 7>7</option>
-        <option value = 8>8</option>      
-      </select>
-      </div>
-
-     <div class="form-group">
-      <label for="Children">Children:</label>
-      <select class="form-control" id="Children" name="Children">  
-        <option value = 0>0</option>
-        <option value = 1>1</option>
-        <option value = 2>2</option>
-        <option value = 3>3</option>
-        <option value = 4>4</option>
-        <option value = 5>5</option> 
-        <option value = 6>6</option>
-        <option value = 7>7</option>
-        <option value = 8>8</option>       
-      </select>
-      </div>
       <div>
       <button id="submit" type="submit" name="submit"  class="btn btn-default" >Submit</button>
       </div>
+      </div>
+      </div>
       </form>
       <?php 
-        if (isset($_POST['submit'])){
+        if (isset($_POST['submit'])){ 
           $Destination = $_POST['Destination'];
           $departingLocation = $_POST['departingLocation'];
-          $departingLocation = $_POST['departingLocation'];
-          $Adults = $_POST['Adults'];
-          $Children = $_POST['Children'];
+          $ExpectedDeparture = $_POST['startDate'];
+          $ExpectedArrival = $_POST['endDate'];
+          $Name = $_POST['Name'];
         } 
+        if ($Destination != ''){
+          if ($query !=''){
+            $query .= '&';
+          }
+          $query .= 'toLocation=' . $Destination;
+        }
+        if ($Destination != ''){
+          if ($query !=''){
+            $query .= '&';
+          }
+          $query .= 'fromLocation=' . $departingLocation;
+        }
+        if ($Destination != ''){
+          if ($query !=''){
+            $query .= '&';
+          }
+          $query .= 'startDate=' . $ExpectedDeparture;
+        }
+        if ($Destination != ''){
+          if ($query !=''){
+            $query .= '&';
+          }
+          $query .= 'endDate=' . $ExpectedArrival;
+        }
+        
       ?>
       <table class="table table-hover" id ="search" >
         <thead>
@@ -136,7 +175,8 @@
           <tbody>
             <?php $counter = 2;
                   $rowID = 1;
-            ?>
+                  echo $return;
+                  ?>
             
 
             <?php
@@ -149,13 +189,13 @@
               echo $Destination;
               echo "</td>";
               echo "<td>";
-              echo $Adults;
-              echo "</td>";
-              echo "<td>";
-              echo $Children;
-              echo "</td>";
-              echo "<td>";
               echo $Name;
+              echo "</td>";
+              echo "<td>";
+              echo $ExpectedDeparture;
+              echo "</td>";
+              echo "<td>";
+              echo $ExpectedArrival;
               echo "</td>";
               echo "</tr>";
               $counter--;
