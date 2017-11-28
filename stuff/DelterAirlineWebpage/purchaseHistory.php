@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php 
-    $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= 151651;
+    session_start();
+    $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= $_SESSION['TotalIncome'];
+    $Name=""; 
+    $purchasehistoryURL ='http://35.188.55.177/api/v1.0/purchases';  $purchaseQuery = '';
     
 
   ?>
@@ -67,15 +70,41 @@
       <button id="submit" type="submit" name="submit"  class="btn btn-default" >Submit</button>
       </div>
       </form>
+      <?php
+      $url_final = $purchasehistoryURL . '?' . $purchaseQuery;
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $purchasehistoryURL);
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch, CURLOPT_URL, $url_final);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $return = curl_exec ($ch);
+        curl_close ($ch);
+        $array = (json_decode($return, true));
+        print_r($array);
+      ?>
       <?php 
         if (isset($_POST['submit'])){
           $TicketID = $_POST['TicketID'];
-        } 
+        }
+        foreach ($array as $level1) {
+            foreach ($level1['purchases'] as $next) {
+              foreach($next['ticket'] as $values){
+                  echo $values . ',';
+                }
+                  
+                
+              }                
+            
+        }
       ?>
       <table class="table table-hover" id ="search" >
         <thead>
           <tr>
+            <th></th>
             <th>Ticket ID</th>
+            <th>Name</th>
             <th>Price</th>
             <th>Departure Location</th>
             <th>Arrival Location<th>

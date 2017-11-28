@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-  <?php 
-    $Destination =NULL; $Children =""; $Adults =""; $departingLocation =NULL; $Name=""; $TotalIncome =545; 
+  <?php
+    session_start(); 
+    $Destination =NULL; $Children =""; $Adults =""; $departingLocation =NULL; $Name=""; $TotalIncome = $_SESSION['TotalIncome'];
     $ExpectedDeparture=''; $ExpectedArrival=''; $tablDepartingLocation = NULL; $tableArrivingLocation = NULL; 
     $Seat = array(); $SeatNumber = ''; $TicketId = ''; $ticket = array();  
     $url ="http://35.188.55.177/api/v1.0/Flight-Search";
     $query ="";
-
+    
   
     
   ?>
@@ -67,25 +68,21 @@
 
       <form name="search" action="pickaflight.php" method="POST" class="form-inline">
       
-      <div class="form-group">
-      <label for="Name">Name:</label>
-      <input type="text" class="form-control -sm" value="<?php if($Name){ echo $Name; } ?>" id="Name" name="Name">
-      </div>
 
       <div class="form-group">
       <label for="depatingLocation">Departure location:</label>
       <select class="form-control" id="departingLocation" name="departingLocation">
         <option  disabled selected value>select an option</option>
-        <option value="LAX">Atlanta</option>
-        <option value="Starkville">Starkville</option>
+        <option value="Atlanta, GA">Atlanta</option>
+        <option value="Starkville, MS">Starkville</option>
       </select>
       </div>
       <div class="form-group">
       <label for="Destination">Destination:</label>
       <select class="form-control" id="Destination" name="Destination" >
         <option disabled selected value>select an option</option>
-        <option value="Philadelphia">Starkville</option>
-        <option value="Atlanta">Atlanta</option>
+        <option value="Starkville, MS">Starkville</option>
+        <option value="Atlanta, GA">Atlanta</option>
       </select>
       </div>
       <div class="container">
@@ -126,7 +123,6 @@
           $departingLocation = $_POST['departingLocation'];
           $ExpectedDeparture = $_POST['startDate'];
           $ExpectedArrival = $_POST['endDate'];
-          $Name = $_POST['Name'];
         } 
         if ($Destination != NULL){
           if ($query !=NULL){
@@ -163,8 +159,10 @@
 
         $return = curl_exec ($ch);
         curl_close ($ch);
-        ?>
         
+            $_SESSION['departingLocation'] = $departingLocation;
+            $_SESSION['Destination'] = $Destination;
+        ?>    
       <table class="table table-hover" id ="search" >
         <thead>
           <tr>
@@ -181,7 +179,7 @@
               $counter = 0;
               $rowID = 1;
               $array = (json_decode($return, true));
-              print_r($array);
+              print_r($array)
               foreach ($array as $level1) {  
                   foreach($level1 as $values)   { 
                       $tablDepartingLocation = $values['fromLocation'];
@@ -194,8 +192,7 @@
                      }
                   }
               }       
-                echo $Seat[0];
-                echo $ticket[0];
+                
                 $totalRow = count($Seat);
             ?>
             
@@ -222,10 +219,6 @@
               $counter++;
               $rowID++;
             } 
-            ?>
-            <?php
-            session_start();
-            $_SESSION['departingLocation'] = $departingLocation;
             ?>
           </tbody>
       </table>  

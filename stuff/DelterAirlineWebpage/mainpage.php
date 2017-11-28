@@ -1,7 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php
-    $TotalIncome =4645; $test=''; 
+    $TotalIncome =4645; $test=''; $url ="http://35.188.55.177/api/v1.0/purchases"; 
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HTTPGET, 1);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $return = curl_exec ($ch);
+    curl_close ($ch);
+    $array = (json_decode($return, true));
+    foreach ($array as $level1) {  
+          $TotalIncome= $level1['total_revenue'];
+      }
+      session_start();
+            $_SESSION['TotalIncome'] = $TotalIncome;  
   ?>
   <head>
 

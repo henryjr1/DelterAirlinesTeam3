@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php 
-    $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= 151651; 
+    session_start();
+    $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= $_SESSION['TotalIncome'];; 
     $email=NULL; ;$fName=NULL; $lName=Null; $address= Null; $SeatNumber = Null;
     
 
@@ -25,12 +26,10 @@
 
   <body>
     <?php
-      session_start();
       $departingLocation = $_SESSION['departingLocation'];
       $Destination = $_SESSION['Destination'];
       $TicketID =  $_GET['id'];
       $SeatNumber =  $_GET['seat'];
-      echo $rowID;
 
       ?>
     <!-- Navigation -->
@@ -66,15 +65,15 @@
         <div class="col-lg-12 text-center">
           <h1 class="mt-5">Info about Your Flight </h1>
           <ul class="list-unstyled">
-            <li style = 'font-size: 30px'>Flight Destination: <?php  $Destination?></li>
-            <li style = 'font-size: 30px'>Flight Departure Location: <?php $departingLocation?></li>
-            <li style = 'font-size: 30px'>Seat Number: <?php $SeatNumber?></li>
-            <li style = 'font-size: 30px'>TicketID: <?php $TicketID?></li>
+            <li style = 'font-size: 25px'>Flight Destination: <?php echo  $Destination?></li>
+            <li style = 'font-size: 25px'>Flight Departure Location: <?php echo  $departingLocation?></li>
+            <li style = 'font-size: 25px'>Seat Number: <?php echo  $SeatNumber?></li>
+            <li style = 'font-size: 25px'>TicketID: <?php echo $TicketID?></li>
           </ul>
         </div>
       </div>
     </div>
-    <!-- Page Content -->
+    <!-- Page Content purchases/order-->
     <div class="container">
       <h1 class="mt-5">Confirm Purchase</h1>
       
