@@ -40,8 +40,8 @@ def generate_random_flight_dates(num_flights):
     for i in range(num_flights):
         departure_hour = random.randint(1, 23)
         departure_minute = random.choice(minutes)
-        departure_day = random.randint(now.day, 30)
         departure_month = random.randint(now.month, 12)
+        departure_day = random.randint(now.day, month_to_date[departure_month])
         departure_year = now.year
         departure_datetime = datetime.datetime(departure_year, departure_month, departure_day, departure_hour,
                                                departure_minute, 0)
@@ -56,7 +56,10 @@ def generate_random_flight_dates(num_flights):
         else:
             arrival_day = arrival_day - month_to_date[departure_month]
             arrival_month = departure_month + 1 if departure_month < 12 else 1
-            arrival_year = departure_year + 1
+            if arrival_month == 1:
+                arrival_year = departure_year + 1
+            else:
+                arrival_year = departure_year
 
         arrival_datetime = datetime.datetime(arrival_year, arrival_month, arrival_day, arrival_hour, arrival_minute, 0)
 
