@@ -20,7 +20,7 @@ api.add_resource(OrderAPI, '/purchases/order')
 api.add_resource(PurchaseHistoryAPI,'/purchases')
 api.add_resource(ResetAPI, '/reset')
 api.add_resource(EditTicketPurchase, '/purchases/tickets/<string:ticket_id>')
-api.add_resource(UpdateTicketPurchaser, '/purchases/tickets/<string:ticket_id>/<string:passenger_id>')
+# api.add_resource(UpdateTicketPurchaser, '/purchases/tickets/<string:ticket_id>/<string:passenger_id>')
 
 gui_api = Api(app)
 gui_api.add_resource(FlightSearch, '/Flight-Search')

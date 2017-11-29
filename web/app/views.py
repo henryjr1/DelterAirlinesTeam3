@@ -249,6 +249,8 @@ class EditTicketPurchase(Resource):
 
     def __init__(self):
         self.passenger_schema = PassengerSchema()
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('name')
 
     #
     def delete(self, ticket_id):
@@ -305,6 +307,29 @@ class EditTicketPurchase(Resource):
         else:
             return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
 
+    def put(self, ticket_id):
+        """
+        Update passenger's name
+        :param ticket_id: ticket id
+        """
+        transaction = Transaction.query.filter(Transaction.ticket_id == ticket_id).first()
+        if transaction is not None:
+            args = self.parser.parse_args()
+            new_name = args['name']
+            if new_name is None or new_name == '': # No input, no update
+                return {'Message':'No input. User information stay the same!'}
+            else:
+                # Update passenger's name
+                # TODO: Might allow options to update other information as well.
+                passenger = transaction.passenger
+                passenger.name = new_name
+                db.session.commit()
+                return {'Passenger': self.passenger_schema.dump(passenger).data}, 200
+        else:
+            return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 401
+
+
+'''
 class UpdateTicketPurchaser(Resource):
 
     def __init__(self):
@@ -328,4 +353,4 @@ class UpdateTicketPurchaser(Resource):
             return {'Error:': 'Passenger of id {} does not exist!'.format(passenger_id)}, 404        
         else:
             return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
-
+'''
