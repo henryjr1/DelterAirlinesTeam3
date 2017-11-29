@@ -12,6 +12,8 @@ from instance.db_create import init_db
 # time and leading zeros (e.g. “2017-09-03T15:04:00”)
 
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
+FLIGHT_SEARCH_DATE_TIME_FORMAT_1 = '%Y-%m-%d'
+FLIGHT_SEARCH_DATE_TIME_FORMAT_2 = '%Y-%m-%dT%H:%M'
 DATE_OF_BIRTH_FORMAT = '%Y-%m-%d'
 
 
@@ -84,13 +86,21 @@ class FlightSearchAPI(Resource):
     def __init__(self):
         self.flight_schema = FlightSchema(many=True)
 
+        self.parser = reqparse.RequestParser()
+        # Required arguments when searching for flights
+        self.parser.add_argument('startDate', required=True, help="Start date cannot be blank!")
+        self.parser.add_argument('endDate', required=True, help="End date cannot be blank!")
+        self.parser.add_argument('fromLocation', required=True, help="Source location cannot be blank!")
+        self.parser.add_argument('toLocation', required=True, help="Destination cannot be blank!")
+
+
     def get(self):
         """
         /inventory?startDate=2017-11-14T00:00&endDate=2017-11-14T23:59&location=Starkville,%20MS
 
         :return:
         """
-        available_flights = self.get_available_flight(request.args)
+        available_flights = self.get_available_flight(self.parser.parse_args())
         result = self.flight_schema.dump(available_flights)
         return {'flights': result.data}
 
@@ -102,15 +112,28 @@ class FlightSearchAPI(Resource):
             return []
         from_location = args['fromLocation']
         to_location = args['toLocation']
-        start_date = datetime.strptime(args['startDate'], '%Y-%m-%d')
-        end_date = datetime.strptime(args['endDate'], '%Y-%m-%d')
-
-        available_flights = Flight.query.filter(Flight.source == from_location,
-                                                Flight.destination == to_location,
-                                                Flight.departure_time >= start_date,
-                                                Flight.arrival_time >= end_date)
+        # Allow two type of format
+        try:
+            start_date = datetime.strptime(args['startDate'], FLIGHT_SEARCH_DATE_TIME_FORMAT_1)
+            end_date = datetime.strptime(args['endDate'], FLIGHT_SEARCH_DATE_TIME_FORMAT_1)
+            # Cast datetime to date
+            available_flights = Flight.query.filter(Flight.source == from_location,
+                                                    Flight.destination == to_location,
+                                                    db.func.date(Flight.departure_time) == start_date,
+                                                    db.func.date(Flight.arrival_time) == end_date)
+        except ValueError:
+            try:
+                start_date = datetime.strptime(args['startDate'], FLIGHT_SEARCH_DATE_TIME_FORMAT_2)
+                end_date = datetime.strptime(args['endDate'], FLIGHT_SEARCH_DATE_TIME_FORMAT_2)
+                available_flights = Flight.query.filter(Flight.source == from_location,
+                                                        Flight.destination == to_location,
+                                                        Flight.departure_time == start_date,
+                                                        Flight.arrival_time == end_date)
+            except ValueError:
+                return {'Error': 'Updated datetime should follow format YYYY-MM-DDTHH:mm or YYYY-MM-DD'}, 400
 
         return available_flights
+
 
 class FlightSearch(FlightSearchAPI):
     def __init__(self):
