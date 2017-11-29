@@ -1,7 +1,7 @@
 # views.py
 from flask_restful import Resource, abort, reqparse
 from flask import request, render_template, make_response, jsonify, redirect
-from sqlalchemy import func
+
 from datetime import datetime
 from app.models import *
 from app.schemas import *
@@ -12,6 +12,8 @@ from instance.db_create import init_db
 # time and leading zeros (e.g. “2017-09-03T15:04:00”)
 
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
+FLIGHT_SEARCH_DATE_TIME_FORMAT_1 = '%Y-%m-%d'
+FLIGHT_SEARCH_DATE_TIME_FORMAT_2 = '%Y-%m-%dT%H:%M'
 DATE_OF_BIRTH_FORMAT = '%Y-%m-%d'
 
 
@@ -84,13 +86,21 @@ class FlightSearchAPI(Resource):
     def __init__(self):
         self.flight_schema = FlightSchema(many=True)
 
+        self.parser = reqparse.RequestParser()
+        # Required arguments when searching for flights
+        self.parser.add_argument('startDate', required=True, help="Start date cannot be blank!")
+        self.parser.add_argument('endDate', required=True, help="End date cannot be blank!")
+        self.parser.add_argument('fromLocation', required=True, help="Source location cannot be blank!")
+        self.parser.add_argument('toLocation', required=True, help="Destination cannot be blank!")
+
+
     def get(self):
         """
         /inventory?startDate=2017-11-14T00:00&endDate=2017-11-14T23:59&location=Starkville,%20MS
 
         :return:
         """
-        available_flights = self.get_available_flight(request.args)
+        available_flights = self.get_available_flight(self.parser.parse_args())
         result = self.flight_schema.dump(available_flights)
         return {'flights': result.data}
 
@@ -102,15 +112,28 @@ class FlightSearchAPI(Resource):
             return []
         from_location = args['fromLocation']
         to_location = args['toLocation']
-        start_date = datetime.strptime(args['startDate'], '%Y-%m-%d')
-        end_date = datetime.strptime(args['endDate'], '%Y-%m-%d')
-
-        available_flights = Flight.query.filter(Flight.source == from_location,
-                                                Flight.destination == to_location,
-                                                Flight.departure_time >= start_date,
-                                                Flight.arrival_time >= end_date)
+        # Allow two type of format
+        try:
+            start_date = datetime.strptime(args['startDate'], FLIGHT_SEARCH_DATE_TIME_FORMAT_1)
+            end_date = datetime.strptime(args['endDate'], FLIGHT_SEARCH_DATE_TIME_FORMAT_1)
+            # Cast datetime to date
+            available_flights = Flight.query.filter(Flight.source == from_location,
+                                                    Flight.destination == to_location,
+                                                    db.func.date(Flight.departure_time) == start_date,
+                                                    db.func.date(Flight.arrival_time) == end_date)
+        except ValueError:
+            try:
+                start_date = datetime.strptime(args['startDate'], FLIGHT_SEARCH_DATE_TIME_FORMAT_2)
+                end_date = datetime.strptime(args['endDate'], FLIGHT_SEARCH_DATE_TIME_FORMAT_2)
+                available_flights = Flight.query.filter(Flight.source == from_location,
+                                                        Flight.destination == to_location,
+                                                        Flight.departure_time == start_date,
+                                                        Flight.arrival_time == end_date)
+            except ValueError:
+                return {'Error': 'Updated datetime should follow format YYYY-MM-DDTHH:mm or YYYY-MM-DD'}, 400
 
         return available_flights
+
 
 class FlightSearch(FlightSearchAPI):
     def __init__(self):
@@ -126,27 +149,27 @@ class FlightSearch(FlightSearchAPI):
         available_flights = self.get_available_flight(args)
         return make_response(render_template('search_result.html', flights=available_flights), 200)
 
-class FlightSearchByDepartingZipCodeAPI(Resource):
+class FlightSearchByDepartingLocationAPI(Resource):
     """
     Search available flights by departing zip code
     """
     def __init__(self):
         self.flight_schema = FlightSchema(many=True)
 
-    def get(self, zip_code):
-        flights = Flight.query.filter(Flight.departure_zip_code==zip_code)
+    def get(self, location):
+        flights = Flight.query.filter(Flight.source==location)
         result = self.flight_schema.dump(flights)
         return {'flights': result.data}
 
-class FlightSearchByArrivingZipCodeAPI(Resource):
+class FlightSearchByArrivingLocationAPI(Resource):
     """
     Search available flights by arriving zip code
     """
     def __init__(self):
         self.flight_schema = FlightSchema(many=True)
 
-    def get(self, zip_code):
-        flights = Flight.query.filter(Flight.arrival_zip_code==zip_code)
+    def get(self, location):
+        flights = Flight.query.filter(Flight.destination==location)
         result = self.flight_schema.dump(flights)
         return {'flights': result.data}
 
@@ -244,3 +267,113 @@ class ResetAPI(Resource):
     def get(self):
         init_db()
         return jsonify({"Message":"Reset successfully!"})
+
+class EditTicketPurchase(Resource):
+
+    def __init__(self):
+        self.passenger_schema = PassengerSchema()
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('name')
+
+    #
+    def delete(self, ticket_id):
+        """
+        Deletes ticket id from transaction table and changes it status to available in ticket table
+        :param ticket_id: ticket id
+        """
+
+        '''
+        ticket_ids = []
+        transactions = Transaction.query.all()
+        for transaction in transactions:
+            ticket_ids += [transaction.ticket.id]
+        if (int(ticket_id) in ticket_ids):
+            ticket_column = Ticket.query.filter_by(id=ticket_id).first()
+            ticket_column.available = True
+            transaction_column = Transaction.query.filter_by(ticket_id=ticket_id).first()
+            db.session.delete(transaction_column)
+            db.session.commit()
+            return jsonify({"Message":"Ticket purchase cancelled succesfully!"})
+        '''
+        transaction = Transaction.query.filter(Transaction.ticket_id == ticket_id).first()
+        if transaction is not None:
+            # TODO: Might need to consider if ticket has expired or not
+            # But for simplicity, ignore that case
+            ticket = transaction.ticket
+            ticket.available = True
+            db.session.delete(transaction)
+            db.session.commit()
+        else:
+            return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
+
+    #Returns the user information for a particular ticket id
+    def get(self, ticket_id):
+        '''
+        ticket_ids = []
+        transactions = Transaction.query.all()
+        for transaction in transactions:
+            ticket_ids += [transaction.ticket.id]
+        if (int(ticket_id) in ticket_ids):
+            transaction_column = Transaction.query.filter_by(ticket_id=ticket_id)
+            result = self.transaction_schema.dump(transaction_column)
+            return {"Purchaser Info": result.data}
+
+        else:
+            return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
+        '''
+
+        transaction = Transaction.query.filter(Transaction.ticket_id==ticket_id).first()
+        if transaction is not None:
+            passenger = transaction.passenger
+            result = self.passenger_schema.dump(passenger)
+            return {'Passenger': result.data}, 200
+        else:
+            return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
+
+    def put(self, ticket_id):
+        """
+        Update passenger's name
+        :param ticket_id: ticket id
+        """
+        transaction = Transaction.query.filter(Transaction.ticket_id == ticket_id).first()
+        if transaction is not None:
+            args = self.parser.parse_args()
+            new_name = args['name']
+            if new_name is None or new_name == '': # No input, no update
+                return {'Message':'No input. User information stay the same!'}
+            else:
+                # Update passenger's name
+                # TODO: Might allow options to update other information as well.
+                passenger = transaction.passenger
+                passenger.name = new_name
+                db.session.commit()
+                return {'Passenger': self.passenger_schema.dump(passenger).data}, 200
+        else:
+            return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 401
+
+
+'''
+class UpdateTicketPurchaser(Resource):
+
+    def __init__(self):
+        self.transaction_schema = TransactionSchema(many=True)
+
+    #Updates the passenger id of a particular ticket purchase
+    def put(self, ticket_id, passenger_id):
+        ticket_ids = []
+        passenger_ids = []
+        transactions = Transaction.query.all()
+        passenger = Passenger.query.all()
+        for transaction in transactions:
+            ticket_ids += [transaction.ticket.id]
+        for passenger in passenger:
+            passenger_ids += [passenger.id]
+        if (int(ticket_id) in ticket_ids and int(passenger_id) in passenger_ids):
+            transaction_column = Transaction.query.filter_by(ticket_id=ticket_id).update(dict(passenger_id=int(passenger_id)))
+            db.session.commit()
+            return jsonify({"Message":"Ticket purchaser succesfully updated!"})
+        elif (int(passenger_id) not in passenger_ids):
+            return {'Error:': 'Passenger of id {} does not exist!'.format(passenger_id)}, 404        
+        else:
+            return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
+'''

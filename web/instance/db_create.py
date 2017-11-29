@@ -5,7 +5,7 @@ Generate sample database for the web app
 '''
 
 from app.models import *
-from app.common.util import generate_random_ticket
+from app.common.util import generate_random_ticket, generate_random_flight_dates
 import datetime
 import random
 
@@ -59,32 +59,8 @@ def init_db():
 
     # insert flight data
     # generate random departure and arrival time
-    departure_datetimes = []
-    arrival_datetimes = []
-
-    minutes = [minute for minute in range(0, 60, 5)]
-    now = datetime.datetime.now()
-    for i in range(6):
-        departure_hour = random.randint(1, 23)
-        departure_minute = random.choice(minutes)
-        departure_day = random.randint(now.day, 30)
-        departure_month = random.randint(now.month, 12)
-        departure_year = now.year
-        departure_datetime = datetime.datetime(departure_year, departure_month, departure_day, departure_hour,
-                                               departure_minute, 0)
-
-        arrival_hour = random.randint(1, 23)
-        arrival_minute = random.choice(minutes)
-        arrival_day = random.randint(now.day, 30)
-        if arrival_day > departure_day:
-            arrival_month = departure_month
-        else:
-            arrival_month = departure_month + 1 if departure_month < 12 else 1
-        arrival_year = now.year
-        arrival_datetime = datetime.datetime(arrival_year, arrival_month, arrival_day, arrival_hour, arrival_minute, 0)
-
-        departure_datetimes.append(departure_datetime)
-        arrival_datetimes.append(arrival_datetime)
+    num_flights = 6
+    departure_datetimes, arrival_datetimes = generate_random_flight_dates(num_flights)
 
     flight1 = Flight(source=STARKVILLE_LOCALE, destination=ATLANTA_LOCALE, locale=STARKVILLE_LOCALE, departure_time=departure_datetimes[0],
                      departure_zip_code=ZIP_CODE[STARKVILLE_LOCALE],
