@@ -4,19 +4,10 @@
     session_start(); 
     $Destination =NULL; $Children =""; $Adults =""; $departingLocation =NULL; $Name=""; $TotalIncome = $_SESSION['TotalIncome'];
     $ExpectedDeparture=''; $ExpectedArrival=''; $tablDepartingLocation = NULL; $tableArrivingLocation = NULL; 
-    $Seat = array(); $SeatNumber = ''; $TicketId = ''; $ticket = array();  
+    $Seat = array(); $SeatNumber = ''; $TicketId = ''; $ticket = array(); $priceArray = array(); 
     $url ="http://35.188.55.177/api/v1.0/Flight-Search";
     $query ="";
-
-  //!!!!API Stuff!!!!
-  //Delter API Key
-  $apiKey = "AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM";
-
-  //Starkville Airport
-  //echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Golden+Triangle+Regional+Airport,Starkville,MS&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Test'>" ;
-  //Atlanta Georgia
-  //echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Hartsfield+Jackson+Atlanta+International,Atlanta,GA&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Atlanta Airport'>" ;
-  //!!!!API Stuff!!!!
+    
   
     
   ?>
@@ -82,16 +73,16 @@
       <label for="depatingLocation">Departure location:</label>
       <select class="form-control" id="departingLocation" name="departingLocation">
         <option  disabled selected value>select an option</option>
-        <option value="Atlanta, GA">Atlanta</option>
-        <option value="Starkville, MS">Starkville</option>
+        <option value="Atlanta%2C%20GA">Atlanta</option>
+        <option value="Starkville%2C%20MS">Starkville</option>
       </select>
       </div>
       <div class="form-group">
       <label for="Destination">Destination:</label>
       <select class="form-control" id="Destination" name="Destination" >
         <option disabled selected value>select an option</option>
-        <option value="Starkville, MS">Starkville</option>
-        <option value="Atlanta, GA">Atlanta</option>
+        <option value="Starkville%2C%20MS">Starkville</option>
+        <option value="Atlanta%2C%20GA">Atlanta</option>
       </select>
       </div>
       <div class="container">
@@ -188,8 +179,7 @@
               $counter = 0;
               $rowID = 1;
               $array = (json_decode($return, true));
-              print_r($array)
-              foreach ($array as $level1) {  
+              foreach ($array as $level1) { 
                   foreach($level1 as $values)   { 
                       $tablDepartingLocation = $values['fromLocation'];
                       $tableArrivingLocation = $values['toLocation'];
@@ -197,6 +187,7 @@
                           if ($moos['available'] == 1){
                           array_push($Seat, $moos['seat_number']);
                           array_push($ticket, $moos['id']);
+                          array_push($priceArray,$moos['price']);
                         }
                      }
                   }
@@ -222,7 +213,7 @@
               echo $Seat[$counter];
               echo "</td>";
               echo "<td>";
-              echo $ExpectedArrival;
+              echo "$". $priceArray[$counter];
               echo "</td>";
               echo "</tr>";
               $counter++;
