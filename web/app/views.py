@@ -244,3 +244,64 @@ class ResetAPI(Resource):
     def get(self):
         init_db()
         return jsonify({"Message":"Reset successfully!"})
+
+class EditTicketPurchase(Resource):
+
+    def __init__(self):
+        self.transaction_schema = TransactionSchema(many=True)
+
+    #Deletes ticket id from transaction table and changes it status to available in ticket table
+    def delete(self, ticket_id):
+        ticket_ids = []
+        transactions = Transaction.query.all()
+        for transaction in transactions:
+            ticket_ids += [transaction.ticket.id]
+        if (int(ticket_id) in ticket_ids):
+            ticket_column = Ticket.query.filter_by(id=ticket_id).first()
+            ticket_column.available = True
+            transaction_column = Transaction.query.filter_by(ticket_id=ticket_id).first()
+            db.session.delete(transaction_column)
+            db.session.commit()
+            return jsonify({"Message":"Ticket purchase cancelled succesfully!"})
+
+        else:
+            return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
+
+    #Returns the user information for a particular ticket id
+    def get(self, ticket_id):
+        ticket_ids = []
+        transactions = Transaction.query.all()
+        for transaction in transactions:
+            ticket_ids += [transaction.ticket.id]
+        if (int(ticket_id) in ticket_ids):
+            transaction_column = Transaction.query.filter_by(ticket_id=ticket_id)
+            result = self.transaction_schema.dump(transaction_column)
+            return {"Purchaser Info": result.data}
+
+        else:
+            return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
+
+class UpdateTicketPurchaser(Resource):
+
+    def __init__(self):
+        self.transaction_schema = TransactionSchema(many=True)
+
+    #Updates the passenger id of a particular ticket purchase
+    def put(self, ticket_id, passenger_id):
+        ticket_ids = []
+        passenger_ids = []
+        transactions = Transaction.query.all()
+        passenger = Passenger.query.all()
+        for transaction in transactions:
+            ticket_ids += [transaction.ticket.id]
+        for passenger in passenger:
+            passenger_ids += [passenger.id]
+        if (int(ticket_id) in ticket_ids and int(passenger_id) in passenger_ids):
+            transaction_column = Transaction.query.filter_by(ticket_id=ticket_id).update(dict(passenger_id=int(passenger_id)))
+            db.session.commit()
+            return jsonify({"Message":"Ticket purchaser succesfully updated!"})
+        elif (int(passenger_id) not in passenger_ids):
+            return {'Error:': 'Passenger of id {} does not exist!'.format(passenger_id)}, 404        
+        else:
+            return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
+
