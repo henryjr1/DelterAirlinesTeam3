@@ -8,7 +8,7 @@ from instance.db_create import init_db
 import time
 import traceback
 
-api = Api(app, prefix="/api/v1.0")
+api = Api(app, prefix="/api/v1.1")
 
 api.add_resource(FlightListAPI, '/flights')
 api.add_resource(FlightAPI, '/flights/<string:flight_id>')
