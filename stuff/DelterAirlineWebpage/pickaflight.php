@@ -7,8 +7,15 @@
     $Seat = array(); $SeatNumber = ''; $TicketId = ''; $ticket = array(); $priceArray = array(); 
     $url ="http://35.188.55.177/api/v1.0/Flight-Search";
     $query ="";
-    
-  
+
+  function getImage($location){
+      if ($location == "Atlanta%2C%20GA"){
+          echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Hartsfield+Jackson+Atlanta+International,Atlanta,GA&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Atlanta Airport'>" ;
+      }
+      if ($location == "Starkville%2C%20MS"){
+          echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Golden+Triangle+Airport,Starkville,MS&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Atlanta Airport'>" ;
+      }
+  }
     
   ?>
   <script>
@@ -221,7 +228,15 @@
             } 
             ?>
           </tbody>
-      </table>  
+      </table>
+        <?php
+        if(isset($_POST['submit'])) {
+            print("Leaving From:   ");
+            getImage($departingLocation);
+            print("Going to:   ");
+            getImage($Destination);
+        }
+        ?>
     </div>
     
     <!-- /.container -->
