@@ -1,7 +1,7 @@
 # views.py
 from flask_restful import Resource, abort, reqparse
 from flask import request, render_template, make_response, jsonify, redirect
-from sqlalchemy import func
+
 from datetime import datetime
 from app.models import *
 from app.schemas import *
@@ -248,10 +248,16 @@ class ResetAPI(Resource):
 class EditTicketPurchase(Resource):
 
     def __init__(self):
-        self.transaction_schema = TransactionSchema(many=True)
+        self.passenger_schema = PassengerSchema()
 
-    #Deletes ticket id from transaction table and changes it status to available in ticket table
+    #
     def delete(self, ticket_id):
+        """
+        Deletes ticket id from transaction table and changes it status to available in ticket table
+        :param ticket_id: ticket id
+        """
+
+        '''
         ticket_ids = []
         transactions = Transaction.query.all()
         for transaction in transactions:
@@ -263,12 +269,21 @@ class EditTicketPurchase(Resource):
             db.session.delete(transaction_column)
             db.session.commit()
             return jsonify({"Message":"Ticket purchase cancelled succesfully!"})
-
+        '''
+        transaction = Transaction.query.filter(Transaction.ticket_id == ticket_id).first()
+        if transaction is not None:
+            # TODO: Might need to consider if ticket has expired or not
+            # But for simplicity, ignore that case
+            ticket = transaction.ticket
+            ticket.available = True
+            db.session.delete(transaction)
+            db.session.commit()
         else:
             return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
 
     #Returns the user information for a particular ticket id
     def get(self, ticket_id):
+        '''
         ticket_ids = []
         transactions = Transaction.query.all()
         for transaction in transactions:
@@ -278,6 +293,15 @@ class EditTicketPurchase(Resource):
             result = self.transaction_schema.dump(transaction_column)
             return {"Purchaser Info": result.data}
 
+        else:
+            return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
+        '''
+
+        transaction = Transaction.query.filter(Transaction.ticket_id==ticket_id).first()
+        if transaction is not None:
+            passenger = transaction.passenger
+            result = self.passenger_schema.dump(passenger)
+            return {'Passenger': result.data}, 200
         else:
             return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
 
