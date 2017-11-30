@@ -4,7 +4,7 @@
     session_start();
     $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= $_SESSION['TotalIncome'];
     $Name=""; 
-    $purchasehistoryURL ='http://35.188.55.177/api/v1.0/purchases';  $purchaseQuery = '';
+    $purchasehistoryURL ='http://35.193.165.105/api/v1.1/purchases';  $purchaseQuery = '';
     
 
   ?>
@@ -38,18 +38,18 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="mainpage.php">Home
+              <a class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/index.php">Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="pickaflight.php">Search for Flight</a>
+              <a class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/pickaflight.php">Search for Flight</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="purchasehistory.php">Purchase History</a>
+              <p class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/purchaseHistory.php">Purchase History</p>
             </li>
             <li class="nav-item">
-              <p class ="nav-link"> Total income <?php echo "$" . $TotalIncome?> </p>
+               <a class ="nav-link" href="http://cloud1.thinkwebstore.com/~delter/mapPage.php"> Closest Airport</a>
             </li>
           </ul>
         </div>
@@ -59,7 +59,7 @@
     <!-- Page Content -->
     <div class="container">
       <h1 class="mt-5">Purchase History</h1>
-      <form name="search" action="purchasehistory.php" method="POST" class="form-inline">
+      <form name="search" action="purchaseHistory.php" method="POST" class="form-inline">
 
       <div class="form-group">
       <label for="TicketID">Ticket Id Number:</label>

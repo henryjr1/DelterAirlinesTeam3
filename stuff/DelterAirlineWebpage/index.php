@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php
+
+  ini_set('session.save_path', '/public_html');
+  session_start();
+
+
     $TotalIncome =4645; $test=''; $url ="http://35.193.165.105/api/v1.1/purchases"; 
     $ch = curl_init();
-
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HTTPGET, 1);
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -15,9 +19,10 @@
     foreach ($array as $level1) {  
           $TotalIncome= $level1['total_revenue'];
       }
-      session_start();
+      
             $_SESSION['TotalIncome'] = $TotalIncome;  
   ?>
+
   <head>
 
     <meta charset="utf-8">
@@ -47,15 +52,18 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="mainpage.php">Home
+              <p class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/index.php">Home
                 <span class="sr-only">(current)</span>
-              </a>
+              </p>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="pickaflight.php">Search for Flight</a>
+              <a class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/pickaflight.php">Search for Flight</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="purchasehistory.php">Purchase History</a>
+              <a class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/purchaseHistory.php">Purchase History</a>
+            </li>
+            <li class="nav-item">
+               <a class ="nav-link" href="http://cloud1.thinkwebstore.com/~delter/mapPage.php"> Closest Airport </a>
             </li>
             <li class="nav-item">
               <p class ="nav-link"> Total income <?php echo "$" . $TotalIncome?> </p>
@@ -85,7 +93,7 @@
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A deserunt neque tempore recusandae animi soluta quasi? Asperiores rem dolore eaque vel, porro, soluta unde debitis aliquam laboriosam. Repellat explicabo, maiores!</p>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis optio neque consectetur consequatur magni in nisi, natus beatae quidem quam odit commodi ducimus totam eum, alias, adipisci nesciunt voluptate. Voluptatum.</p>
           <p>
-            <a class="btn btn-primary btn-lg" href="#">Buy Tickets Now! &raquo;</a>
+            <a class="btn btn-primary btn-lg" href="http://cloud1.thinkwebstore.com/~delter/pickaflight.php">Buy Tickets Now! &raquo;</a>
           </p>
         </div>
         <div class="col-sm-4">
@@ -117,7 +125,7 @@
             </div>
             <div class="card-footer"> 
               <div>
-                <a href="pickaflight.php" class="btn btn-primary">Start Your Adventure Here!</a>
+                <a href="http://cloud1.thinkwebstore.com/~delter/pickaflight.php" class="btn btn-primary">Start Your Adventure Here!</a>
               </div>
             </div>
           </div>
@@ -130,7 +138,7 @@
               <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque sequi doloribus totam ut praesentium aut.</p>
             </div>
             <div class="card-footer">
-              <a href="purchasehistory.php" class="btn btn-primary">Look back to the Past!</a>
+              <a href="http://cloud1.thinkwebstore.com/~delter/purchaseHistory.php" class="btn btn-primary">Look back to the Past!</a>
             </div>
           </div>
         </div>
@@ -142,7 +150,7 @@
               <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary">Get Airborne Now!</a>
+              <a href="http://cloud1.thinkwebstore.com/~delter/mapPage.php" class="btn btn-primary">Get Airborne Now!</a>
             </div>
           </div>
         </div>

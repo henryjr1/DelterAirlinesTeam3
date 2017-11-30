@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+ 
   <?php
+    ini_set('session.save_path', '/public_html');
     session_start(); 
     $Destination =NULL; $Children =""; $Adults =""; $departingLocation =NULL; $Name=""; $TotalIncome = $_SESSION['TotalIncome'];
     $ExpectedDeparture=''; $ExpectedArrival=''; $tablDepartingLocation = NULL; $tableArrivingLocation = NULL; 
-    $Seat = array(); $SeatNumber = ''; $TicketId = ''; $ticket = array(); $priceArray = array(); 
+    $Seat = array(); $SeatNumber = ''; $TicketId = ''; $ticket = array(); $priceArray = array(); $array='';
     $url ="http://35.193.165.105/api/v1.1/Flight-Search";
     $query ="";
-    function getImage($location){
-      if ($location == "Atlanta%2C%20GA"){
-          echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Hartsfield+Jackson+Atlanta+International,Atlanta,GA&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Atlanta Airport'>" ;
-      }
-      if ($location == "Starkville%2C%20MS"){
-          echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Golden+Triangle+Airport,Starkville,MS&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Atlanta Airport'>" ;
-      }
-    }
+   
   
     
   ?>
@@ -49,18 +44,18 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="mainpage.php">Home
+              <a class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/index.php">Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="pickaflight.php">Search for Flight</a>
+              <p class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/pickaflight.php">Search for Flight</p>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="purchasehistory.php">Purchase History</a>
+              <a class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/purchaseHistory.php">Purchase History</a>
             </li>
             <li class="nav-item">
-              <p class ="nav-link"> Total income <?php echo "$" . $TotalIncome?> </p>
+               <a class ="nav-link" href="http://cloud1.thinkwebstore.com/~delter/mapPage.php"> Closest Airport </a>
             </li>
           </ul>
 
@@ -72,8 +67,7 @@
     <div class="container">
       
       <h1 class="mt-5">Select a Flight</h1>
-
-      <form name="search" action="pickaflight.php" method="POST" class="form-inline">
+      <form name="search" action="http://cloud1.thinkwebstore.com/~delter/pickaflight.php" method="POST" class="form-inline">
       
 
       <div class="form-group">
@@ -186,7 +180,7 @@
               $counter = 0;
               $rowID = 1;
               $array = (json_decode($return, true));
-              if(!empty($array)){
+              if(is_array($array)){
               foreach ($array as $level1) { 
                   foreach($level1 as $values)   { 
                       $tablDepartingLocation = $values['fromLocation'];
@@ -200,15 +194,15 @@
                      }
                   }
               } 
-              }      
-                
                 $totalRow = count($Seat);
+              }
+
             ?>
             
 
             <?php
             while($counter  < $totalRow){
-              echo "<tr onClick=location.href='confirmPurchase.php?id=".$ticket[$counter]."&seat=".$Seat[$counter]."' class ='tablerows' id =$rowID>";
+              echo "<tr onClick=location.href='http://cloud1.thinkwebstore.com/~delter/confirmPurchase.php?id=".$ticket[$counter]."&seat=".$Seat[$counter]."' class ='tablerows' id =$rowID>";
               echo "<td>";
               echo $rowID;
               echo "</td>";
@@ -232,10 +226,7 @@
           </tbody>
       </table>  
     </div>
-    <?php 
-    
-    getimage($Destination)
-  ?>
+   
 
     <!-- /.container -->
 

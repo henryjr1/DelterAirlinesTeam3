@@ -3,8 +3,39 @@
   <?php 
     session_start();
     $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= $_SESSION['TotalIncome'];; 
-    $email=NULL; ;$fName=NULL; $lName=Null; $address= Null; $SeatNumber = Null;
-    
+    $email=NULL; ;$fName=NULL; $lName=Null; $address= Null; $SeatNumber = Null; $url = "http:/35.193.165.105/api/v1.1/purchases/order?";
+
+function httpPost($url,$params){
+  $postData = '';
+   //create name value pairs seperated by &
+   foreach($params as $k => $v) 
+   { 
+      $postData .= $k . '='.$v.'&'; 
+   }
+   $postData = rtrim($postData, '&');
+ 
+    $ch = curl_init();  
+ 
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+    curl_setopt($ch,CURLOPT_HEADER, false); 
+    curl_setopt($ch, CURLOPT_POST, count($postData));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);    
+ 
+    $output=curl_exec($ch);
+ 
+    curl_close($ch);
+    return $output;
+  }
+
+    function getImage($location){
+      if ($location == "Atlanta%2C%20GA"){
+          echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Hartsfield+Jackson+Atlanta+International,Atlanta,GA&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Atlanta Airport'>" ;
+      }
+      if ($location == "Starkville%2C%20MS"){
+          echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Golden+Triangle+Airport,Starkville,MS&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Atlanta Airport'>" ;
+      }
+    } 
 
   ?>
   <head>
@@ -25,11 +56,27 @@
   </head>
 
   <body>
+     <?php 
+        if (isset($_POST['submit'])){
+          $username = $_POST['username'];
+          $fName = $_POST['fName'];
+          $email = $_POST['email'];
+          $address = $_POST['address'];
+          $dob = $_POST['dob'];
+          $ticketID = $_POST['ticket'];
+           $post = array('ticketID' => $ticketID);
+           $post['username'] = $username;
+           $post['name']   = $fName;
+           $post['email'] = $email;
+           $post['address'] =$address;
+           $post['dob'] = $dob;
+         
+        httpPost($url, $post);
+        }
+          ?>
     <?php
       $departingLocation = $_SESSION['departingLocation'];
       $Destination = $_SESSION['Destination'];
-      $TicketID =  $_GET['id'];
-      $SeatNumber =  $_GET['seat'];
 
       ?>
     <!-- Navigation -->
@@ -43,40 +90,62 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="mainpage.php">Home
+              <a class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/index.php">Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="pickaflight.php">Search for Flight</a>
+              <a class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/pickaflight.php">Search for Flight</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="purchasehistory.php">Purchase History</a>
+              <a class="nav-link" href="http://cloud1.thinkwebstore.com/~delter/purchaseHistory.php">Purchase History</a>
             </li>
             <li class="nav-item">
-              <p class ="nav-link"> Total income <?php echo "$" . $TotalIncome?> </p>
+              <p class ="nav-link" href="http://cloud1.thinkwebstore.com/~delter/mapPage.php"> Closest Airport </p>
             </li>
           </ul>
+
         </div>
       </div>
     </nav>
     <!-- Page Content purchases/order-->
     <div class="container">
-      <h1 class="mt-5">Confirm Purchase</h1>
-      
-      <form name="search" action="purchasehistory.php" method="POST" class="form">
-      <div class="form-group">
-      <label for="fname">First Name:</label>
-      <div>
-      <button id="submit" type="submit" name="submit"  class="btn btn-default" >Confirm Purchase</button>
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h1 class="mt-5">Closest Airport</h1>
+        </div>
+        <div class=" col-offset-4">
+           <form name="search" action="http://cloud1.thinkwebstore.com/~delter/mapPage.php" method="POST" class="form-inline well">
+              <div class="form-group ">
+              <label for="location">Select A Location:</label>
+              <select class="form-control" id="location" name="location" style = 'text-align:center'; >
+                <option disabled selected value>select an option</option>
+                <option value="Starkville%2C%20MS">Starkville</option>
+                <option value="Atlanta%2C%20GA">Atlanta</option>
+              </select>
+              </div>
+              <div>
+              <button id="submit" type="submit" name="submit"  class="btn btn-default" >Submit</button>
+              </div>
+          </form>
+          <?php 
+            if (isset($_POST['submit'])){
+              $location = $_POST['location'];
+            } 
+          ?>
+          <?php 
+            getimage($location)
+          ?>
+        </div>
+        </div>
       </div>
-      </form>
-      <?php 
-        if (isset($_POST['submit'])){
-          $TicketID = $_POST['TicketID'];
-        } 
-      ?>
-    
+    </div>
+    <div class="container">
+      
+      
+     
+      
+     
     <!-- /.container -->
 
     <!-- Bootstrap core JavaScript -->
