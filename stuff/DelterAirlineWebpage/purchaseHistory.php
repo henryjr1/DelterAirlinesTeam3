@@ -25,7 +25,36 @@
 
   </head>
 
-  <body>
+  <script  type="text/javascript">
+    function httpGet(theUrl) 
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        xmlHttp.send( null );
+        var myData = eval("(" + xmlHttp.responseText + ")");
+        var purchases = myData.purchase_history.purchases; 
+        var html = '<tr><th>Ticket ID</th>' +
+                   '<th>Flight ID</th>' +
+                   '<th>Availability</th>' +
+                   '<th>Price</th>' +
+                   '<th>Seat Number</th></tr>';
+        
+        for (var i = 0; i < purchases.length; i++)
+        {
+            html += '<tr><td>' + purchases[i].ticket.id 
+                 + '</td><td>' + purchases[i].ticket.flight_id 
+                 + '</td><td>' + purchases[i].ticket.available 
+                 + '</td><td>$' + purchases[i].ticket.price 
+                 + '</td><td>' + purchases[i].ticket.seat_number 
+                 + '</td></tr>';
+        }
+
+
+        document.getElementById('table').innerHTML += '<table border="1">' + html + '</table>';
+    }       
+</script>
+
+  <body onload="httpGet('http://35.193.165.105/api/v1.1/purchases')">
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -57,88 +86,7 @@
     </nav>
 
     <!-- Page Content -->
-    <div class="container">
-      <h1 class="mt-5">Purchase History</h1>
-      <form name="search" action="purchaseHistory.php" method="POST" class="form-inline">
-
-      <div class="form-group">
-      <label for="TicketID">Ticket Id Number:</label>
-      <input type="text" class="form-control" value="<?php if($TicketID){ echo $TicketID; } ?>" id="TicketID" name="TicketID">
-      </div>
-
-      <div>
-      <button id="submit" type="submit" name="submit"  class="btn btn-default" >Submit</button>
-      </div>
-      </form>
-      <?php
-      $url_final = $purchasehistoryURL . '?' . $purchaseQuery;
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $purchasehistoryURL);
-        curl_setopt($ch, CURLOPT_HTTPGET, 1);
-        curl_setopt($ch, CURLOPT_URL, $url_final);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        $return = curl_exec ($ch);
-        curl_close ($ch);
-        $array = (json_decode($return, true));
-        print_r($array);
-      ?>
-      <?php 
-        if (isset($_POST['submit'])){
-          $TicketID = $_POST['TicketID'];
-        }
-        foreach ($array as $level1) {
-            foreach ($level1['purchases'] as $next) {
-              foreach($next['ticket'] as $values){
-                  echo $values . ',';
-                }
-                  
-                
-              }                
-            
-        }
-      ?>
-      <table class="table table-hover" id ="search" >
-        <thead>
-          <tr>
-            <th></th>
-            <th>Ticket ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Departure Location</th>
-            <th>Arrival Location<th>
-          </tr>
-        </thead>
-          <tbody>
-            <?php $counter = 2;
-                  $rowID = 1;
-            ?>
-            
-
-            <?php
-            while($counter >=0){
-              echo "<tr class ='tablerows' id =$rowID>";
-              echo "<td>";
-              echo $TicketID;
-              echo "</td>";
-              echo "<td>";
-              echo $TicketID;
-              echo "</td>";
-              echo "<td>";
-              echo $TicketID;
-              echo "</td>";
-              echo "<td>";
-              echo $TicketID;
-              echo "</td>";
-              echo "</tr>";
-              $counter--;
-            } 
-            ?>
-          </tbody>
-      </table>  
-    </div>
-    
+    <div align="center" id='table'></div>    
     <!-- /.container -->
 
     <!-- Bootstrap core JavaScript -->
