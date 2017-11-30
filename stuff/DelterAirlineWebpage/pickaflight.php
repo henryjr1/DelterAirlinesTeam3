@@ -5,17 +5,17 @@
     $Destination =NULL; $Children =""; $Adults =""; $departingLocation =NULL; $Name=""; $TotalIncome = $_SESSION['TotalIncome'];
     $ExpectedDeparture=''; $ExpectedArrival=''; $tablDepartingLocation = NULL; $tableArrivingLocation = NULL; 
     $Seat = array(); $SeatNumber = ''; $TicketId = ''; $ticket = array(); $priceArray = array(); 
-    $url ="http://35.188.55.177/api/v1.0/Flight-Search";
+    $url ="http://35.193.165.105/api/v1.1/Flight-Search";
     $query ="";
-
-  function getImage($location){
+    function getImage($location){
       if ($location == "Atlanta%2C%20GA"){
           echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Hartsfield+Jackson+Atlanta+International,Atlanta,GA&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Atlanta Airport'>" ;
       }
       if ($location == "Starkville%2C%20MS"){
           echo  "<img src='https://maps.googleapis.com/maps/api/staticmap?center=Golden+Triangle+Airport,Starkville,MS&zoom=12&size=400x400&key=AIzaSyDhR32QX2WI2aym_eQNTWvb7urWIVjWqxM' alt='Atlanta Airport'>" ;
       }
-  }
+    }
+  
     
   ?>
   <script>
@@ -186,6 +186,7 @@
               $counter = 0;
               $rowID = 1;
               $array = (json_decode($return, true));
+              if(!empty($array)){
               foreach ($array as $level1) { 
                   foreach($level1 as $values)   { 
                       $tablDepartingLocation = $values['fromLocation'];
@@ -198,7 +199,8 @@
                         }
                      }
                   }
-              }       
+              } 
+              }      
                 
                 $totalRow = count($Seat);
             ?>
@@ -228,17 +230,13 @@
             } 
             ?>
           </tbody>
-      </table>
-        <?php
-        if(isset($_POST['submit'])) {
-            print("Leaving From:   ");
-            getImage($departingLocation);
-            print("Going to:   ");
-            getImage($Destination);
-        }
-        ?>
+      </table>  
     </div>
+    <?php 
     
+    getimage($Destination)
+  ?>
+
     <!-- /.container -->
 
     <!-- Bootstrap core JavaScript -->

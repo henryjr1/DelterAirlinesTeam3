@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php
-    $TotalIncome =4645; $test=''; $url ="http://35.188.55.177/api/v1.0/purchases"; 
+    $TotalIncome =4645; $test=''; $url ="http://35.193.165.105/api/v1.1/purchases"; 
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_URL, $url);

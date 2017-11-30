@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
 
-$url = 'http://35.188.55.177/api/v1.0/Flight-Search?toLocation=Atlanta%2C%20GA&startDate=2017-12-28&fromLocation=Starkville%2C%20MS&endDate=2017-01-28';
+$url = 'http://35.193.165.105/api/v1.0/Flight-Search?toLocation=Atlanta%2C%20GA&startDate=2017-12-29&fromLocation=Starkville%2C%20MS&endDate=2018-01-01';
 		$ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);

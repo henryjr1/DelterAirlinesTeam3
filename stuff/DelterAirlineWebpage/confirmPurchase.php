@@ -2,11 +2,36 @@
 <html lang="en">
   <?php 
     session_start();
-    $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= $_SESSION['TotalIncome'];; 
-    $email=NULL; ;$fName=NULL; $lName=Null; $address= Null; $SeatNumber = Null;
-    
+    $Destination =""; $departingLocation =""; $_SESSION["TicketID"]; $Price=""; $TotalIncome= $_SESSION['TotalIncome']; $fields_string= '';
+    $email=NULL; $fName=NULL; $username=Null; $address= Null;  $_SESSION["seat"]; $url = "http:/35.193.165.105/api/v1.1/purchases/order?";
+    $dob=NULL;
+
+  function httpPost($url,$params){
+  $postData = '';
+   //create name value pairs seperated by &
+   foreach($params as $k => $v) 
+   { 
+      $postData .= $k . '='.$v.'&'; 
+   }
+   $postData = rtrim($postData, '&');
+ 
+    $ch = curl_init();  
+ 
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+    curl_setopt($ch,CURLOPT_HEADER, false); 
+    curl_setopt($ch, CURLOPT_POST, count($postData));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);    
+ 
+    $output=curl_exec($ch);
+ 
+    curl_close($ch);
+    return $output;
+  }
 
   ?>
+ 
+
   <head>
 
     <meta charset="utf-8">
@@ -28,8 +53,12 @@
     <?php
       $departingLocation = $_SESSION['departingLocation'];
       $Destination = $_SESSION['Destination'];
-      $TicketID =  $_GET['id'];
-      $SeatNumber =  $_GET['seat'];
+      if ( $_SESSION["TicketID"] == NULL){ 
+       $_SESSION["TicketID"] =  $_GET['id'];
+      }
+      if ( $_SESSION["seat"] == NULL){ 
+       $_SESSION["seat"] =  $_GET['seat'];
+      }
 
       ?>
     <!-- Navigation -->
@@ -65,10 +94,10 @@
         <div class="col-lg-12 text-center">
           <h1 class="mt-5">Info about Your Flight </h1>
           <ul class="list-unstyled">
-            <li style = 'font-size: 25px'>Flight Destination: <?php echo  $Destination?></li>
-            <li style = 'font-size: 25px'>Flight Departure Location: <?php echo  $departingLocation?></li>
-            <li style = 'font-size: 25px'>Seat Number: <?php echo  $SeatNumber?></li>
-            <li style = 'font-size: 25px'>TicketID: <?php echo $TicketID?></li>
+            <li style = 'font-size: 25px'>Flight Destination: <?php echo  urldecode ( $Destination);?></li>
+            <li style = 'font-size: 25px'>Flight Departure Location: <?php echo  urldecode ( $departingLocation);?></li>
+            <li style = 'font-size: 25px'>Seat Number: <?php echo   $_SESSION["seat"];?></li>
+            <li style = 'font-size: 25px'>TicketID: <?php echo $_SESSION["TicketID"];?></li>
           </ul>
         </div>
       </div>
@@ -77,26 +106,48 @@
     <div class="container">
       <h1 class="mt-5">Confirm Purchase</h1>
       
-      <form name="search" action="purchasehistory.php" method="POST" class="form">
+      <form name="search" action="confirmpurchase.php" method="POST" class="form">
       <div class="form-group">
-      <label for="fname">First Name:</label>
-      <input type="text" class="form-control" value="<?php if($fName){ echo $fName; } ?>" id="fName" name="fName">
-      <label for="lName">Last Name:</label>
-      <input type="text" class="form-control" value="<?php if($lName){ echo $lName; } ?>" id="lName" name="lName">
+      <label for="fname">Name:</label>
+      <input type="text" class="form-control"  id="fName" name="fName">
+      <label for="username">username:</label>
+      <input type="text" class="form-control"  id="username" name="username">
       <label for="email">Email:</label>
-      <input type="text" class="form-control" value="<?php if($email){ echo $email; } ?>" id="email" name="email">
+      <input type="text" class="form-control"  id="email" name="email">
       <label for="address">Address:</label>
-      <input type="text" class="form-control" value="<?php if($address){ echo $address; } ?>" id="address" name="address">
+      <input type="text" class="form-control" id="address" name="address">
+      <label for="dob">Expected DOB</label>
+      <input type="date" class="form-control" id="dob" name="dob"
+        placeholder="Pick DOB date">       
       </div>
+         <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+        </script>
+ 
       <div>
       <button id="submit" type="submit" name="submit"  class="btn btn-default" >Confirm Purchase</button>
       </div>
       </form>
       <?php 
         if (isset($_POST['submit'])){
-          $TicketID = $_POST['TicketID'];
-        } 
-      ?>
+          $username = $_POST['username'];
+          $fName = $_POST['fName'];
+          $email = $_POST['email'];
+          $address = $_POST['address'];
+          $dob = $_POST['dob'];
+           $post =array(
+          'ticketID' => $_SESSION["TicketID"],
+          'username' => $username,
+          'name'   => $fName,
+          'email' => $email,
+          'address' =>$address,
+          'dob' => $dob 
+          );
+         }
+          httpPost($url, $post);
+          ?>
     
     <!-- /.container -->
 
