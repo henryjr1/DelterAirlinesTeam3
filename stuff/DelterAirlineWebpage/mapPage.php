@@ -2,8 +2,8 @@
 <html lang="en">
   <?php 
   header("Location: http://cloud1.thinkwebstore.com/~delter/confirmPurchase.php");
-    session_start();
-    $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= $_SESSION['TotalIncome'];; 
+    
+    $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; 
     $email=NULL; ;$fName=NULL; $lName=Null; $address= Null; $SeatNumber = Null; $url = "http:/35.193.165.105/api/v1.1/purchases/order?";
 
 function httpPost($url,$params){

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php 
-    session_start();
-    $Destination =""; $departingLocation =""; $Price=""; $TotalIncome= $_SESSION['TotalIncome']; $fields_string= '';
+   
+    $Destination =""; $departingLocation =""; $Price="";  $fields_string= '';
     $email=NULL; $fName=NULL; $username=Null; $address= Null;  $_SESSION["seat"]; 
     $dob=NULL;
 

@@ -2,11 +2,7 @@
 <html lang="en">
   <?php
 
-  ini_set('session.save_path', '/public_html');
-  session_start();
-
-
-    $TotalIncome =4645; $test=''; $url ="http://35.193.165.105/api/v1.1/purchases"; 
+    $url ="http://35.193.165.105/api/v1.1/purchases"; 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HTTPGET, 1);
@@ -20,7 +16,6 @@
           $TotalIncome= $level1['total_revenue'];
       }
       
-            $_SESSION['TotalIncome'] = $TotalIncome;  
   ?>
 
   <head>

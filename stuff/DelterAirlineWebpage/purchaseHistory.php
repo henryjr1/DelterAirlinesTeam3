@@ -2,7 +2,7 @@
 <html lang="en">
   <?php 
     session_start();
-    $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= $_SESSION['TotalIncome'];
+    $Destination =""; $departingLocation =""; $TicketID=""; $Price="";
     $Name=""; 
     $purchasehistoryURL ='http://35.193.165.105/api/v1.1/purchases';  $purchaseQuery = '';
     

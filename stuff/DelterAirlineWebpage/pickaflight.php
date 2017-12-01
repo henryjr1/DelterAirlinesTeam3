@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
  
-  <?php
-    ini_set('session.save_path', '/public_html');
-    session_start(); 
-    $Destination =NULL; $Children =""; $Adults =""; $departingLocation =NULL; $Name=""; $TotalIncome = $_SESSION['TotalIncome'];
+  <?php 
+    $Destination =NULL; $Children =""; $Adults =""; $departingLocation =NULL; $Name="";
     $ExpectedDeparture=''; $ExpectedArrival=''; $tablDepartingLocation = NULL; $tableArrivingLocation = NULL; 
     $Seat = array(); $SeatNumber = ''; $TicketId = ''; $ticket = array(); $priceArray = array(); $array='';
     $url ="http://35.193.165.105/api/v1.1/Flight-Search";
@@ -161,8 +159,6 @@
         $return = curl_exec ($ch);
         curl_close ($ch);
         
-            $_SESSION['departingLocation'] = $departingLocation;
-            $_SESSION['Destination'] = $Destination;
         ?>    
       <table class="table table-hover" id ="search" >
         <thead>
