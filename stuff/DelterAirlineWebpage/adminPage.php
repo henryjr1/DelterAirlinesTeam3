@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php 
-    $Destination =""; $departingLocation =""; $Price=""; $TotalIncome= $_SESSION['TotalIncome']; $fields_string= '';
-    $email=NULL; $fName=NULL; $username=Null; $address= Null;  $_SESSION["seat"]; 
-    $dob=NULL;
-
+    $Destination =""; $departingLocation =""; $Price="";  $Seat = array(); $SeatNumber = ''; $TicketId = '';
+    $priceArray = array(); $array=''; $ticket = array(); $available = array(); $tableArrivingLocation =array(); $tablDepartingLocation =array();
+    $email=NULL; $fName=NULL; $username=Null; $address= Null;  
+    $dob=NULL; $flighturl = 'http://35.193.165.105/api/v1.1/flights';
   
   ?>
   
@@ -27,20 +27,7 @@
   </head>
 
   <body>
-    <?php
-    
-   
-      $departingLocation = $_SESSION['departingLocation'];
-      $Destination = $_SESSION['Destination'];
-      if(isset($_GET['id'])){
-        $ticket = $_GET['id'];
-       
-      }
-      if ( $_SESSION["seat"] == NULL){ 
-       $_SESSION["seat"] =  $_GET['seat'];
-      }
-    $ticket = $_GET['id'];
-      ?>
+
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -95,12 +82,108 @@
         </script>
  
       <div>
-      <button id="submit" type="submit" name="submit"  class="btn btn-default" onclick="return confirm('Purchase Confirmed!')" >Confirm Purchase</button>
+      <button id="add" type="submit" name="add"  class="btn btn-default" onclick="return confirm('Ticket Added')" >Add Ticket</button>
       </div>
       </form>
-   
-     
     
+
+    </div> 
+    <div class="container">
+      <h1 class="mt-5">Remove A Ticket</h1>
+      <div class="form-group">
+      <label for="fname">Name:</label>
+      <input type="text" class="form-control"  id="fName" name="fName">
+      
+      <button id="delete" type="submit" name="delete"  class="btn btn-default" onclick="return confirm('Ticket Delted!')" >Remove Ticket</button>
+      </div>
+      </form>
+    </div>  
+    <div class="container">
+      
+      <h1 class="mt-5">Select a Flight</h1>
+
+      <?php 
+      
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $flighturl);
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $return = curl_exec ($ch);
+        curl_close ($ch);
+    
+        ?>    
+      <table class="table table-hover" id ="search" >
+        <thead>
+          <tr>
+            <th></th>
+            <th>Departure Location</th>
+            <th>Arrival Location</th>
+            <th>Availiblty </th> 
+            <th>Seats</th>
+            <th>Price</th>
+            <th>Ticket Id </th>
+          </tr>
+        </thead>
+          <tbody>
+            <?php 
+
+              $counter = 0;
+              $rowID = 1;
+              $array = (json_decode($return, true));
+              if(is_array($array)){
+              foreach ($array as $level1) { 
+                  foreach($level1 as $values)   { 
+                     foreach($values['tickets'] as $moos){
+                          array_push($Seat, $moos['seat_number']);
+                          array_push($ticket, $moos['id']);
+                          array_push($priceArray,$moos['price']);
+                          array_push($available,$moos['available']);
+                          array_push($tablDepartingLocation, $values['fromLocation']);
+                          array_push($tableArrivingLocation, $values['toLocation']);
+                     }
+                  }
+      
+                
+              }
+            }
+                $totalRow = count($Seat);
+            ?>
+            
+
+            <?php
+            while($counter  < $totalRow){
+              echo "<tr onClick=location.href='http://cloud1.thinkwebstore.com/~delter/confirmPurchase.php?id=".$ticket[$counter]."&seat=".$Seat[$counter]."&destination=".$Destination."&departingLocation=".$departingLocation."' class ='tablerows' id =$rowID>";
+              echo "<td>";
+              echo $rowID;
+              echo "</td>";
+              echo "<td>";
+              echo $tablDepartingLocation[$counter];
+              echo "</td>";
+              echo "<td>";
+              echo $tableArrivingLocation[$counter];
+              echo "</td>";;
+              echo "<td>";
+              echo $available[$counter];
+              echo "</td>";
+              echo "<td>";
+              echo $Seat[$counter];
+              echo "</td>";
+              echo "<td>";
+              echo "$". $priceArray[$counter];
+              echo "</td>";
+              echo "<td>";
+              echo $ticket[$counter];
+              echo "</td>";
+              echo "</tr>";
+              $counter++;
+              $rowID++;
+            } 
+  
+            ?>
+          </tbody>
+      </table>  
+    </div>
     <!-- /.container -->
 
     <!-- Bootstrap core JavaScript -->
