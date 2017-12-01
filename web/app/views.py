@@ -303,6 +303,7 @@ class EditTicketPurchase(Resource):
             ticket.available = True
             db.session.delete(transaction)
             db.session.commit()
+            return {'Message:': 'Successully canceled ticket with id {}!'.format(ticket_id)}, 200
         else:
             return {'Error:': 'Ticket of id {} does not exist or has not been purchased yet!'.format(ticket_id)}, 404
 
