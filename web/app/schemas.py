@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields
 
+DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 
 class PassengerSchema(Schema):
     id = fields.Int()
@@ -39,8 +40,8 @@ class FlightSchema(Schema):
     toLocation = fields.Str(attribute="destination")
     # plane_id = fields.Int()
     plane = fields.Nested(PlaneSchema)
-    startDate = fields.DateTime(attribute="departure_time")
-    endDate = fields.DateTime(attribute="arrival_time")
+    startDate = fields.DateTime(attribute="departure_time", format=DATE_TIME_FORMAT)
+    endDate = fields.DateTime(attribute="arrival_time", format=DATE_TIME_FORMAT)
     departingZipCode = fields.DateTime(attribute="departure_zip_code")
     arrivingZipCode = fields.DateTime(attribute="arrival_zip_code")
     locale = fields.DateTime()

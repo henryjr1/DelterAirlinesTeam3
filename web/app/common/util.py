@@ -40,8 +40,10 @@ def generate_random_flight_dates(num_flights):
     for i in range(num_flights):
         departure_hour = random.randint(1, 23)
         departure_minute = random.choice(minutes)
-        departure_month = random.randint(now.month, 12)
-        departure_day = random.randint(now.day, month_to_date[departure_month])
+        # date start from 11-01-2017.
+        # TODO: This is for testing purpose to match with other services. Might consider start from current date
+        departure_month = random.randint(11, 12)
+        departure_day = random.randint(1, month_to_date[departure_month])
         departure_year = now.year
         departure_datetime = datetime.datetime(departure_year, departure_month, departure_day, departure_hour,
                                                departure_minute, 0)

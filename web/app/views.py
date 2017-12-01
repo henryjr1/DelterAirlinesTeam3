@@ -13,7 +13,7 @@ from instance.db_create import init_db
 
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 FLIGHT_SEARCH_DATE_TIME_FORMAT_1 = '%Y-%m-%d'
-FLIGHT_SEARCH_DATE_TIME_FORMAT_2 = '%Y-%m-%dT%H:%M'
+FLIGHT_SEARCH_DATE_TIME_FORMAT_2 = DATE_TIME_FORMAT
 DATE_OF_BIRTH_FORMAT = '%Y-%m-%d'
 
 
