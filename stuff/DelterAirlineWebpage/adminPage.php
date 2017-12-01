@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php 
-    $Destination =""; $departingLocation =""; $Price="";  $Seat = array(); $SeatNumber = ''; $TicketId = '';
-    $priceArray = array(); $array=''; $ticket = array(); $available = array(); $tableArrivingLocation =array(); $tablDepartingLocation =array();
+    $Destination =""; $departingLocation =""; $Price=""; $SeatNumber = ''; $TicketId = '';
+    $array=''; $ticket = array(); $tableArrivingLocation =array(); $tablDepartingLocation =array();
     $email=NULL; $fName=NULL; $username=Null; $address= Null; $dob=NULL; $flighturl = 'http://35.193.165.105/api/v1.1/flights';
     $deleteurl = 'http://35.193.165.105/api/v1.1/purchases/tickets/'; $deleteTicket = NUll; $finalDeleteUrl = NULL; 
-
+    $priceArray = array(); $array=''; $ticket = array(); $available = array();  $Seat = array();
 
    function curl_del($path)
     {
@@ -26,8 +26,8 @@
         if (isset($_POST['delete'])){
             $deleteTicket = $_POST['DTickedId'];
             $finalDeleteUrl = $deleteurl . '' . $deleteTicket;
-            echo $finalDeleteUrl;
-            echo curl_del($finalDeleteUrl);
+            $finalDeleteUrl;
+            curl_del($finalDeleteUrl);
             unset($_POST['delete']);
           }
          
@@ -40,7 +40,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Confirm Purchase</title>
+    <title>Admin Page</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -81,53 +81,26 @@
         </div>
       </div>
     </nav>
-    
   
-    <!-- Page Content purchases/order-->
-    <div class="container">
-      <h1 class="mt-5">Add A Ticket</h1>
-      <form name="AddTicket" action= 'http://cloud1.thinkwebstore.com/~delter/adminPage.php' method="POST" class="form"> 
-      <div class="form-group">
-      <label for="fname">Name:</label>
-      <input type="text" class="form-control"  id="fName" name="fName">
-      <label for="email">Email:</label>
-      <input type="text" class="form-control"  id="email" name="email">
-      <label for="address">Address:</label>
-      <input type="text" class="form-control" id="address" name="address">
-      <label for="dob">Date of Birth</label>
-      <input type="date" class="form-control" id="dob" name="dob"
-        placeholder="Pick DOB date">      
-      <input type="hidden" class="form-control"  id="ticket" name="ticket" value = '<?php echo htmlspecialchars($_GET['id'])?>'>
-      </div>
-  
-         <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker1').datetimepicker();
-            });
-        </script>
- 
-      <div>
-      <button id="add" type="submit" name="add"  class="btn btn-default" onclick="return confirm('Ticket Added')" >Add Ticket</button>
-      </div>
-      </form>
-    
-
     </div> 
     <form name="DeleteTicket" action= 'adminPage.php' method="POST" class="form"> 
     <div class="container">
-      <h1 class="mt-5">Remove A Ticket</h1>
+      <h1 class="mt-5">Delete Ticket Order</h1>
       <div class="form-group">
       <label for="DTickedId">TicketID:</label>
       <input type="text" class="form-control"  id="DTickedId" name="DTickedId">
-      
-      <button id="delete" type="submit" name="delete"  class="btn btn-default" onclick="return confirm('Ticket Deleted!')" >Remove Ticket</button>
+      <style type="text/css">
+      .blue-background {background-color:#0000ff;}
+      .white {color:#ffffff;}
+      </style>  
+      <button id="delete" type="submit" name="delete"  class="btn btn-primary blue-background white" onclick="return confirm('Ticket Deleted!')" >Remove Order</button>
       </div>
       </form>
      
     </div>  
     <div class="container">
       
-      <h1 class="mt-5">Select a Flight</h1>
+      <h1 class="mt-5">All Tickets</h1>
 
       <?php 
       
@@ -165,22 +138,27 @@
                           array_push($Seat, $moos['seat_number']);
                           array_push($ticket, $moos['id']);
                           array_push($priceArray,$moos['price']);
-                          array_push($available,$moos['available']);
                           array_push($tablDepartingLocation, $values['fromLocation']);
                           array_push($tableArrivingLocation, $values['toLocation']);
+                          if ($moos['available'] ==1){
+                            array_push($available,"Yes");
+                          }
+                          else{
+                            array_push($available,'No');
+                          }
                      }
                   }
-      
                 
               }
             }
                 $totalRow = count($Seat);
+           
             ?>
             
 
             <?php
             while($counter  < $totalRow){
-              echo "<tr onClick=location.href='http://cloud1.thinkwebstore.com/~delter/confirmPurchase.php?id=".$ticket[$counter]."&seat=".$Seat[$counter]."&destination=".$Destination."&departingLocation=".$departingLocation."' class ='tablerows' id =$rowID>";
+             echo "<tr>";
               echo "<td>";
               echo $rowID;
               echo "</td>";
