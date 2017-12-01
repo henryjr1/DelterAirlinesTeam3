@@ -107,7 +107,7 @@ def init_db():
     # randomly create sample transactions
     created_transaction = 0
     passengers = [passenger1, passenger2, passenger3]
-    while (created_transaction < 10):
+    while (created_transaction < 50):
         selected_ticket_set = random.randint(1, 6)
         if selected_ticket_set == 1:
             ticket = random.choice(tickets1)
