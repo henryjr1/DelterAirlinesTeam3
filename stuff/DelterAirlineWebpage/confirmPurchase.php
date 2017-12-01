@@ -71,21 +71,21 @@
         </div>
       </div>
     </nav>
-    <!--
+    
     <div class="container">
       <div class="row">
         <div class="col-lg-12 text-center">
           <h1 class="mt-5">Info about Your Flight </h1>
           <ul class="list-unstyled">
-            <li style = 'font-size: 25px'>Flight Destination: <?//php echo  urldecode ( $Destination);?></li>
-            <li style = 'font-size: 25px'>Flight Departure Location: <?php //echo  urldecode ( $departingLocation);?></li>
-            <li style = 'font-size: 25px'>Seat Number: <?//php echo   $_SESSION["seat"];?></li>
-            <li style = 'font-size: 25px'>TicketID: <?//php echo $ticket;?></li>
+            <li style = 'font-size: 25px'>Flight Destination: <?php echo  urldecode($_GET['destination']);?></li>
+            <li style = 'font-size: 25px'>Flight Departure Location: <?php echo  urldecode($_GET['departingLocation']);?></li>
+            <li style = 'font-size: 25px'>Seat Number: <?php echo   $_SESSION["seat"];?></li>
+            <li style = 'font-size: 25px'>TicketID: <?php echo $ticket;?></li>
           </ul>
         </div>
       </div>
     </div>
-  -->
+  
     <!-- Page Content purchases/order-->
     <div class="container">
       <h1 class="mt-5">Confirm Purchase</h1>
@@ -113,7 +113,7 @@
         </script>
  
       <div>
-      <button id="submit" type="submit" name="submit"  class="btn btn-default" >Confirm Purchase</button>
+      <button id="submit" type="submit" name="submit"  class="btn btn-default" onclick="return confirm('Purchase Confirmed!')" >Confirm Purchase</button>
       </div>
       </form>
    

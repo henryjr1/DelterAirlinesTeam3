@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php 
+  header("Location: http://cloud1.thinkwebstore.com/~delter/confirmPurchase.php");
     session_start();
     $Destination =""; $departingLocation =""; $TicketID=""; $Price=""; $TotalIncome= $_SESSION['TotalIncome'];; 
     $email=NULL; ;$fName=NULL; $lName=Null; $address= Null; $SeatNumber = Null; $url = "http:/35.193.165.105/api/v1.1/purchases/order?";
@@ -23,7 +24,7 @@ function httpPost($url,$params){
     curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);    
  
     $output=curl_exec($ch);
- 
+    
     curl_close($ch);
     return $output;
   }
@@ -45,7 +46,7 @@ function httpPost($url,$params){
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Confirm Purchase</title>
+    <title>Locate A Airport</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -70,13 +71,10 @@ function httpPost($url,$params){
            $post['email'] = $email;
            $post['address'] =$address;
            $post['dob'] = $dob;
-         
-        httpPost($url, $post);
         }
           ?>
     <?php
-      $departingLocation = $_SESSION['departingLocation'];
-      $Destination = $_SESSION['Destination'];
+      
 
       ?>
     <!-- Navigation -->
