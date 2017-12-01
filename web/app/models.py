@@ -40,7 +40,7 @@ class Flight(db.Model):
     arrival_time = db.Column(db.DateTime, nullable=False)
     arrival_zip_code = db.Column(db.Integer, nullable=False)
     locale = db.Column(db.String(50), nullable=False)
-    tickets = db.relationship("Ticket", backref="flights", lazy="dynamic")
+    tickets = db.relationship("Ticket", backref="flights", lazy="dynamic", order_by='Ticket.id')
 
 
 class Ticket(db.Model):
@@ -72,10 +72,10 @@ class Transaction(db.Model):
     # booking_date_time = db.Column(db.DateTime, nullable=False)
 
     passenger_id = db.Column(db.Integer, db.ForeignKey('passengers.id'))
-    passenger = db.relationship('Passenger', backref='transactions')
+    passenger = db.relationship('Passenger', backref='transactions', cascade='save-update')
 
     ticket_id = db.Column(db.Integer, db.ForeignKey('tickets.id'))
-    ticket = db.relationship('Ticket', backref='transactions')
+    ticket = db.relationship('Ticket', backref='transactions', cascade='save-update')
 
     # airfare_id = db.Column(db.Integer, db.ForeignKey('airfares.id'))
     # airfare = db.relationship('AirFare', backref='transactions')
