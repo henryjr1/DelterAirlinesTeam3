@@ -3,11 +3,35 @@
   <?php 
     $Destination =""; $departingLocation =""; $Price="";  $Seat = array(); $SeatNumber = ''; $TicketId = '';
     $priceArray = array(); $array=''; $ticket = array(); $available = array(); $tableArrivingLocation =array(); $tablDepartingLocation =array();
-    $email=NULL; $fName=NULL; $username=Null; $address= Null;  
-    $dob=NULL; $flighturl = 'http://35.193.165.105/api/v1.1/flights';
+    $email=NULL; $fName=NULL; $username=Null; $address= Null; $dob=NULL; $flighturl = 'http://35.193.165.105/api/v1.1/flights';
+    $deleteurl = 'http://35.193.165.105/api/v1.1/purchases/tickets/'; $deleteTicket = NUll; $finalDeleteUrl = NULL; 
+
+
+   function curl_del($path)
+    {
+
+    $url =$path;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+    $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return $result;
+    }
   
   ?>
-  
+   <?php 
+        if (isset($_POST['delete'])){
+            $deleteTicket = $_POST['DTickedId'];
+            $finalDeleteUrl = $deleteurl . '' . $deleteTicket;
+            echo $finalDeleteUrl;
+            echo curl_del($finalDeleteUrl);
+            unset($_POST['delete']);
+          }
+         
+  ?>
 
   <head>
 
@@ -62,6 +86,7 @@
     <!-- Page Content purchases/order-->
     <div class="container">
       <h1 class="mt-5">Add A Ticket</h1>
+      <form name="AddTicket" action= 'http://cloud1.thinkwebstore.com/~delter/adminPage.php' method="POST" class="form"> 
       <div class="form-group">
       <label for="fname">Name:</label>
       <input type="text" class="form-control"  id="fName" name="fName">
@@ -88,15 +113,17 @@
     
 
     </div> 
+    <form name="DeleteTicket" action= 'adminPage.php' method="POST" class="form"> 
     <div class="container">
       <h1 class="mt-5">Remove A Ticket</h1>
       <div class="form-group">
-      <label for="fname">Name:</label>
-      <input type="text" class="form-control"  id="fName" name="fName">
+      <label for="DTickedId">TicketID:</label>
+      <input type="text" class="form-control"  id="DTickedId" name="DTickedId">
       
-      <button id="delete" type="submit" name="delete"  class="btn btn-default" onclick="return confirm('Ticket Delted!')" >Remove Ticket</button>
+      <button id="delete" type="submit" name="delete"  class="btn btn-default" onclick="return confirm('Ticket Deleted!')" >Remove Ticket</button>
       </div>
       </form>
+     
     </div>  
     <div class="container">
       
